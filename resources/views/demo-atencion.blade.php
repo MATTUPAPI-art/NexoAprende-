@@ -8,24 +8,22 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Actividad de atención visual</title>
+    <title>NexoAprende</title>
 
     <style>
         :root {
-            --primary: #4f46e5;
-            --primary-dark: #3730a3;
-            --secondary: #eef2ff;
-            --text: #1f2937;
+            --primary: #5746e8;
+            --primary-dark: #4032b7;
+            --primary-light: #eeecff;
+            --text: #182033;
             --muted: #64748b;
-            --background: #f8fafc;
+            --background: #f6f7fb;
             --surface: #ffffff;
-            --border: #dbe3ef;
+            --border: #dfe5ef;
             --success: #15803d;
-            --success-background: #dcfce7;
+            --success-light: #dcfce7;
             --danger: #b91c1c;
-            --danger-background: #fee2e2;
-            --warning-background: #fff7ed;
-            --warning-border: #fdba74;
+            --danger-light: #fee2e2;
         }
 
         * {
@@ -35,39 +33,95 @@
         body {
             margin: 0;
             min-height: 100vh;
-            font-family:
-                Inter, ui-sans-serif, system-ui, -apple-system,
-                BlinkMacSystemFont, "Segoe UI", sans-serif;
             color: var(--text);
-            background:
-                radial-gradient(circle at top left, #e0e7ff, transparent 35%),
-                var(--background);
+            background: var(--background);
+            font-family:
+                Inter, system-ui, -apple-system, BlinkMacSystemFont,
+                "Segoe UI", sans-serif;
         }
 
         button {
             font: inherit;
         }
 
+        [hidden] {
+            display: none !important;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 74px;
+            padding: 0 max(24px, calc((100% - 1040px) / 2));
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 0;
+            color: var(--text);
+            background: transparent;
+            font-size: 20px;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .brand-icon {
+            display: grid;
+            place-items: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            color: #ffffff;
+            background: var(--primary);
+        }
+
+        .navigation {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-button {
+            padding: 9px 13px;
+            border: 0;
+            border-radius: 10px;
+            color: var(--muted);
+            background: transparent;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .nav-button:hover {
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .nav-button:disabled {
+            cursor: default;
+            opacity: 0.45;
+        }
+
         .container {
-            width: min(960px, calc(100% - 32px));
+            width: min(1040px, calc(100% - 32px));
             margin: 0 auto;
-            padding: 40px 0;
+            padding: 46px 0;
         }
 
-        .header {
-            margin-bottom: 24px;
+        .hero {
+            max-width: 700px;
+            margin-bottom: 30px;
         }
 
-        .badge {
-            display: inline-block;
-            padding: 6px 12px;
-            margin-bottom: 12px;
-            border-radius: 999px;
-            color: var(--primary-dark);
-            background: var(--secondary);
+        .small-title {
+            margin: 0 0 9px;
+            color: var(--primary);
             font-size: 13px;
-            font-weight: 800;
-            letter-spacing: 0.06em;
+            font-weight: 900;
+            letter-spacing: 0.08em;
         }
 
         h1,
@@ -78,103 +132,186 @@
         }
 
         h1 {
-            margin-bottom: 10px;
-            font-size: clamp(30px, 5vw, 48px);
-            line-height: 1.05;
+            margin-bottom: 12px;
+            font-size: clamp(32px, 5vw, 52px);
+            line-height: 1.08;
         }
 
-        .subtitle {
-            max-width: 700px;
+        .hero-text {
             margin-bottom: 0;
             color: var(--muted);
             font-size: 18px;
             line-height: 1.6;
         }
 
-        .notice {
-            padding: 16px 18px;
-            margin-bottom: 24px;
-            border: 1px solid var(--warning-border);
-            border-radius: 14px;
-            background: var(--warning-background);
-            line-height: 1.5;
+        .activity-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
         }
 
-        .panel {
-            padding: clamp(20px, 4vw, 36px);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            background: var(--surface);
-            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
-        }
-
-        .activity-header {
+        .activity-card {
+            position: relative;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
+            min-height: 290px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            background: var(--surface);
+            flex-direction: column;
+            box-shadow: 0 14px 35px rgba(15, 23, 42, 0.06);
+        }
+
+        .activity-card.available {
+            border: 2px solid var(--primary);
+        }
+
+        .activity-card.locked {
+            opacity: 0.7;
+        }
+
+        .activity-icon {
+            display: grid;
+            place-items: center;
+            width: 62px;
+            height: 62px;
+            margin-bottom: 22px;
+            border-radius: 18px;
+            background: var(--primary-light);
+            font-size: 31px;
+        }
+
+        .activity-card h2 {
             margin-bottom: 10px;
+            font-size: 23px;
         }
 
-        .eyebrow {
-            margin-bottom: 6px;
-            color: var(--primary);
-            font-size: 13px;
-            font-weight: 800;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-
-        h2 {
-            margin-bottom: 0;
-            font-size: clamp(22px, 4vw, 32px);
-        }
-
-        .instructions {
+        .activity-card p {
             margin-bottom: 22px;
             color: var(--muted);
-            line-height: 1.6;
+            line-height: 1.55;
+        }
+
+        .card-status {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 6px 9px;
+            border-radius: 999px;
+            color: var(--primary-dark);
+            background: var(--primary-light);
+            font-size: 11px;
+            font-weight: 900;
         }
 
         .primary-button,
-        .secondary-button {
+        .secondary-button,
+        .back-button {
             min-height: 46px;
-            padding: 11px 20px;
             border-radius: 12px;
             font-weight: 800;
             cursor: pointer;
         }
 
         .primary-button {
-            flex-shrink: 0;
+            width: 100%;
+            padding: 11px 18px;
+            margin-top: auto;
             border: 2px solid var(--primary);
             color: #ffffff;
             background: var(--primary);
         }
 
         .primary-button:hover {
-            background: var(--primary-dark);
             border-color: var(--primary-dark);
+            background: var(--primary-dark);
         }
 
         .secondary-button {
+            padding: 10px 16px;
             border: 2px solid var(--primary);
             color: var(--primary-dark);
             background: #ffffff;
         }
 
-        .primary-button:focus-visible,
-        .secondary-button:focus-visible,
-        .card:focus-visible {
-            outline: 4px solid #c7d2fe;
-            outline-offset: 3px;
+        .locked-button {
+            width: 100%;
+            min-height: 46px;
+            padding: 10px 16px;
+            margin-top: auto;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--muted);
+            background: #f8fafc;
+            font-weight: 800;
+            cursor: not-allowed;
+        }
+
+        .family-note {
+            margin-top: 24px;
+            padding: 17px 20px;
+            border: 1px solid #f5d48c;
+            border-radius: 15px;
+            background: #fffbeb;
+            color: #5f4b1d;
+            line-height: 1.55;
+        }
+
+        .back-button {
+            padding: 8px 12px;
+            margin-bottom: 18px;
+            border: 0;
+            color: var(--primary-dark);
+            background: transparent;
+        }
+
+        .back-button:hover {
+            background: var(--primary-light);
+        }
+
+        .game-panel {
+            padding: clamp(22px, 4vw, 38px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            background: var(--surface);
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+        }
+
+        .game-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 18px;
+        }
+
+        .game-heading {
+            max-width: 680px;
+        }
+
+        .game-heading h1 {
+            margin-bottom: 10px;
+            font-size: clamp(28px, 4vw, 42px);
+        }
+
+        .game-description {
+            margin-bottom: 0;
+            color: var(--muted);
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        .start-button {
+            width: auto;
+            min-width: 140px;
+            flex-shrink: 0;
         }
 
         .stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
-            margin-bottom: 24px;
+            margin: 24px 0;
         }
 
         .stat {
@@ -194,11 +331,11 @@
         }
 
         .stat-value {
-            font-size: 22px;
+            font-size: 23px;
             font-weight: 900;
         }
 
-        .grid {
+        .game-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 14px;
@@ -210,14 +347,14 @@
             display: grid;
             place-items: center;
             min-height: 260px;
-            padding: 24px;
+            padding: 25px;
             border: 2px dashed var(--border);
             border-radius: 18px;
             color: var(--muted);
             text-align: center;
         }
 
-        .card {
+        .animal-card {
             position: relative;
             display: grid;
             place-items: center;
@@ -226,236 +363,338 @@
             border-radius: 18px;
             background: #ffffff;
             cursor: pointer;
-            transition:
-                transform 150ms ease,
-                border-color 150ms ease,
-                background 150ms ease;
+            transition: 150ms ease;
         }
 
-        .card:hover:not(:disabled) {
-            transform: translateY(-3px);
+        .animal-card:hover:not(:disabled) {
             border-color: var(--primary);
+            transform: translateY(-3px);
         }
 
-        .card:disabled {
+        .animal-card:disabled {
             cursor: default;
             opacity: 1;
         }
 
-        .symbol {
-            font-size: clamp(42px, 7vw, 64px);
+        .animal-symbol {
+            font-size: clamp(43px, 7vw, 65px);
             line-height: 1;
         }
 
         .marker {
             position: absolute;
             top: 8px;
-            right: 10px;
+            right: 9px;
             display: grid;
             place-items: center;
             width: 30px;
             height: 30px;
-            border-radius: 999px;
-            font-size: 20px;
+            border-radius: 50%;
+            color: #ffffff;
+            font-size: 19px;
             font-weight: 900;
         }
 
-        .card.correct {
+        .animal-card.correct {
             border-color: var(--success);
-            background: var(--success-background);
+            background: var(--success-light);
         }
 
-        .card.correct .marker {
-            color: #ffffff;
+        .animal-card.correct .marker {
             background: var(--success);
         }
 
-        .card.error {
+        .animal-card.error {
             border-color: var(--danger);
-            background: var(--danger-background);
-            animation: shake 240ms linear;
+            background: var(--danger-light);
         }
 
-        .card.error .marker {
-            color: #ffffff;
+        .animal-card.error .marker {
             background: var(--danger);
         }
 
-        .result {
+        .result-panel {
             margin-top: 24px;
             padding: 22px;
             border: 2px solid var(--success);
             border-radius: 18px;
-            background: var(--success-background);
+            background: var(--success-light);
         }
 
-        .result h3 {
+        .result-panel h2 {
             margin-bottom: 8px;
             color: var(--success);
         }
 
-        .result p {
-            line-height: 1.6;
+        .result-panel p {
+            line-height: 1.55;
         }
 
-        .result-note {
-            color: #475569;
-            font-size: 14px;
+        .result-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
-        .footer {
-            margin-top: 18px;
+        .result-actions .primary-button {
+            width: auto;
+            margin-top: 0;
+        }
+
+        .safety-note {
+            margin-top: 25px;
             color: var(--muted);
-            font-size: 14px;
+            font-size: 13px;
             text-align: center;
         }
 
-        [hidden] {
-            display: none !important;
+        button:focus-visible {
+            outline: 4px solid #c7d2fe;
+            outline-offset: 3px;
         }
 
-        @keyframes shake {
-            0%, 100% {
-                transform: translateX(0);
+        @media (max-width: 760px) {
+            .activity-list {
+                grid-template-columns: 1fr;
             }
 
-            25% {
-                transform: translateX(-5px);
+            .activity-card {
+                min-height: 250px;
             }
 
-            75% {
-                transform: translateX(5px);
-            }
-        }
-
-        @media (max-width: 650px) {
-            .container {
-                width: min(100% - 20px, 960px);
-                padding: 20px 0;
-            }
-
-            .activity-header {
-                align-items: stretch;
+            .game-header {
                 flex-direction: column;
             }
 
-            .grid {
+            .start-button {
+                width: 100%;
+            }
+
+            .game-grid {
                 grid-template-columns: repeat(3, 1fr);
                 gap: 10px;
             }
 
-            .card {
+            .animal-card {
                 min-height: 95px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .topbar {
+                padding: 0 14px;
+            }
+
+            .navigation .nav-button:disabled {
+                display: none;
+            }
+
+            .container {
+                width: min(100% - 20px, 1040px);
+                padding: 25px 0;
+            }
+
+            .stats {
+                gap: 7px;
+            }
+
+            .stat {
+                padding: 11px 5px;
+            }
+
+            .stat-value {
+                font-size: 19px;
             }
         }
     </style>
 </head>
 
 <body>
+    <header class="topbar">
+        <button id="brandButton" class="brand" type="button">
+            <span class="brand-icon">✦</span>
+            <span>NexoAprende</span>
+        </button>
+
+        <nav class="navigation" aria-label="Navegación principal">
+            <button id="activitiesButton" class="nav-button" type="button">
+                Actividades
+            </button>
+
+            <button class="nav-button" type="button" disabled>
+                Mi progreso
+            </button>
+        </nav>
+    </header>
+
     <main class="container">
-        <header class="header">
-            <span class="badge">DEMO PROVISIONAL</span>
+        <section id="menuScreen">
+            <div class="hero">
+                <p class="small-title">APRENDE A TU RITMO</p>
 
-            <h1>Actividad de atención visual</h1>
+                <h1>¿Qué quieres practicar hoy?</h1>
 
-            <p class="subtitle">
-                Una demostración inicial de la plataforma de apoyo
-                educativo infantil para realizar actividades breves
-                y registrar el desempeño de cada sesión.
-            </p>
-        </header>
-
-        <aside class="notice">
-            <strong>Importante:</strong>
-            esta actividad es educativa y complementaria.
-            No diagnostica TDAH, dislexia ni ninguna otra condición.
-        </aside>
-
-        <section class="panel">
-            <div class="activity-header">
-                <div>
-                    <p class="eyebrow">Objetivo: atención selectiva</p>
-
-                    <h2>
-                        Encuentra todos los perros
-                        <span aria-hidden="true">🐶</span>
-                    </h2>
-                </div>
-
-                <button
-                    id="startButton"
-                    class="primary-button"
-                    type="button"
-                >
-                    Comenzar
-                </button>
-            </div>
-
-            <p class="instructions">
-                Selecciona únicamente los perros. Los animales están
-                representados mediante símbolos para que el resultado
-                no dependa exclusivamente del color.
-            </p>
-
-            <section
-                class="stats"
-                aria-label="Resultados actuales"
-                aria-live="polite"
-            >
-                <div class="stat">
-                    <span class="stat-label">Aciertos</span>
-                    <span id="correctValue" class="stat-value">0 / 4</span>
-                </div>
-
-                <div class="stat">
-                    <span class="stat-label">Errores</span>
-                    <span id="errorValue" class="stat-value">0</span>
-                </div>
-
-                <div class="stat">
-                    <span class="stat-label">Tiempo</span>
-                    <span id="timeValue" class="stat-value">0 s</span>
-                </div>
-            </section>
-
-            <div
-                id="gameGrid"
-                class="grid"
-                aria-label="Animales de la actividad"
-            >
-                <div class="empty-state">
-                    Presiona “Comenzar” para iniciar la actividad.
-                </div>
-            </div>
-
-            <section
-                id="resultPanel"
-                class="result"
-                aria-live="polite"
-                hidden
-            >
-                <h3>Actividad completada</h3>
-
-                <p id="resultText"></p>
-
-                <p class="result-note">
-                    Este resultado describe únicamente esta sesión
-                    y no constituye una evaluación clínica.
+                <p class="hero-text">
+                    Elige una actividad, diviértete y descubre todo
+                    lo que puedes lograr.
                 </p>
+            </div>
 
-                <button
-                    id="restartButton"
-                    class="secondary-button"
-                    type="button"
-                >
-                    Realizar nuevamente
-                </button>
-            </section>
+            <div class="activity-list">
+                <article class="activity-card available">
+                    <span class="card-status">DISPONIBLE</span>
+                    <div class="activity-icon" aria-hidden="true">🎯</div>
+
+                    <h2>Atención y concentración</h2>
+
+                    <p>
+                        Observa con cuidado, encuentra los elementos
+                        correctos y pon a prueba tu atención.
+                    </p>
+
+                    <button
+                        id="playAttentionButton"
+                        class="primary-button"
+                        type="button"
+                    >
+                        Jugar ahora
+                    </button>
+                </article>
+
+                <article class="activity-card locked">
+                    <span class="card-status">Todavia no hay</span>
+                    <div class="activity-icon" aria-hidden="true">🧠</div>
+
+                    <h2>Memoria</h2>
+
+                    <p>
+                        Recuerda imágenes, encuentra parejas y
+                        completa pequeñas secuencias.
+                    </p>
+
+                    <button class="locked-button" type="button" disabled>
+                        Próximamente
+                    </button>
+                </article>
+
+                <article class="activity-card locked">
+                    <span class="card-status">aun no preparado </span>
+                    <div class="activity-icon" aria-hidden="true">📚</div>
+
+                    <h2>Lectura</h2>
+
+                    <p>
+                        Relaciona palabras e imágenes y practica
+                        con historias breves.
+                    </p>
+
+                    <button class="locked-button" type="button" disabled>
+                        Próximamente
+                    </button>
+                </article>
+            </div>
+
+            <aside class="family-note">
+                <strong>Para las familias:</strong>
+                las actividades muestran el resultado de cada sesión
+                de forma sencilla, sin realizar diagnósticos.
+            </aside>
         </section>
 
-        <footer class="footer">
-            Avance funcional provisional — Proyecto Integrador II
-        </footer>
+        <section id="gameScreen" hidden>
+            <button id="backButton" class="back-button" type="button">
+                ← Volver a las actividades
+            </button>
+
+            <section class="game-panel">
+                <div class="game-header">
+                    <div class="game-heading">
+                        <p class="small-title">ATENCIÓN Y CONCENTRACIÓN</p>
+
+                        <h1>
+                            Encuentra todos los perros
+                            <span aria-hidden="true">🐶</span>
+                        </h1>
+
+                        <p class="game-description">
+                            Este juego corto te ayuda a practicar tu
+                            concentración. Observa con calma y demuestra
+                            lo atento que eres.
+                        </p>
+                    </div>
+
+                    <button
+                        id="startButton"
+                        class="primary-button start-button"
+                        type="button"
+                    >
+                        Comenzar
+                    </button>
+                </div>
+
+                <section class="stats" aria-live="polite">
+                    <div class="stat">
+                        <span class="stat-label">Encontrados</span>
+                        <span id="correctValue" class="stat-value">0 / 4</span>
+                    </div>
+
+                    <div class="stat">
+                        <span class="stat-label">Intentos</span>
+                        <span id="errorValue" class="stat-value">0</span>
+                    </div>
+
+                    <div class="stat">
+                        <span class="stat-label">Tiempo</span>
+                        <span id="timeValue" class="stat-value">0 s</span>
+                    </div>
+                </section>
+
+                <div
+                    id="gameGrid"
+                    class="game-grid"
+                    aria-label="Animales de la actividad"
+                >
+                    <div class="empty-state">
+                        Cuando estés listo, presiona “Comenzar”.
+                    </div>
+                </div>
+
+                <section
+                    id="resultPanel"
+                    class="result-panel"
+                    aria-live="polite"
+                    hidden
+                >
+                    <h2 id="resultTitle">¡Muy bien!</h2>
+
+                    <p id="encouragementText"></p>
+                    <p id="resultText"></p>
+
+                    <div class="result-actions">
+                        <button
+                            id="restartButton"
+                            class="primary-button"
+                            type="button"
+                        >
+                            Jugar otra vez
+                        </button>
+
+                        <button
+                            id="returnButton"
+                            class="secondary-button"
+                            type="button"
+                        >
+                            Seguir aprendiendo
+                        </button>
+                    </div>
+                </section>
+            </section>
+
+            <p class="safety-note">
+                Esta actividad practica habilidades de atención.
+                No sustituye la orientación de un profesional.
+            </p>
+        </section>
     </main>
 
     <script>
@@ -478,6 +717,14 @@
             animal => animal.target
         ).length;
 
+        const menuScreen = document.getElementById('menuScreen');
+        const gameScreen = document.getElementById('gameScreen');
+        const brandButton = document.getElementById('brandButton');
+        const activitiesButton = document.getElementById('activitiesButton');
+        const playAttentionButton =
+            document.getElementById('playAttentionButton');
+        const backButton = document.getElementById('backButton');
+        const returnButton = document.getElementById('returnButton');
         const startButton = document.getElementById('startButton');
         const restartButton = document.getElementById('restartButton');
         const gameGrid = document.getElementById('gameGrid');
@@ -485,13 +732,30 @@
         const errorValue = document.getElementById('errorValue');
         const timeValue = document.getElementById('timeValue');
         const resultPanel = document.getElementById('resultPanel');
+        const resultTitle = document.getElementById('resultTitle');
         const resultText = document.getElementById('resultText');
+        const encouragementText =
+            document.getElementById('encouragementText');
 
         let correctAnswers = 0;
         let errors = 0;
         let seconds = 0;
         let timer = null;
         let gameActive = false;
+
+        function showMenu() {
+            window.clearInterval(timer);
+            gameActive = false;
+            gameScreen.hidden = true;
+            menuScreen.hidden = false;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showGame() {
+            menuScreen.hidden = true;
+            gameScreen.hidden = false;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
         function shuffle(items) {
             const shuffled = [...items];
@@ -513,24 +777,23 @@
         function updateStats() {
             correctValue.textContent =
                 `${correctAnswers} / ${totalTargets}`;
-
             errorValue.textContent = errors;
             timeValue.textContent = `${seconds} s`;
         }
 
-        function createCard(animal) {
+        function createAnimalCard(animal) {
             const button = document.createElement('button');
             const symbol = document.createElement('span');
             const marker = document.createElement('span');
 
             button.type = 'button';
-            button.className = 'card';
+            button.className = 'animal-card';
             button.setAttribute(
                 'aria-label',
                 `Seleccionar ${animal.label}`
             );
 
-            symbol.className = 'symbol';
+            symbol.className = 'animal-symbol';
             symbol.textContent = animal.symbol;
             symbol.setAttribute('aria-hidden', 'true');
 
@@ -540,13 +803,13 @@
             button.append(symbol, marker);
 
             button.addEventListener('click', () => {
-                selectCard(button, marker, animal);
+                selectAnimal(button, marker, animal);
             });
 
             return button;
         }
 
-        function selectCard(button, marker, animal) {
+        function selectAnimal(button, marker, animal) {
             if (!gameActive || button.dataset.resolved === 'true') {
                 return;
             }
@@ -567,7 +830,7 @@
                     button.classList.remove('error');
                     marker.textContent = '';
                     button.disabled = false;
-                }, 550);
+                }, 500);
             }
 
             updateStats();
@@ -575,6 +838,33 @@
             if (correctAnswers === totalTargets) {
                 finishGame();
             }
+        }
+
+        function getEncouragement() {
+            if (errors === 0) {
+                return {
+                    title: '¡Excelente trabajo!',
+                    message:
+                        'Encontraste todos los perros sin equivocarte. ' +
+                        '¡Sigue así!'
+                };
+            }
+
+            if (errors <= 2) {
+                return {
+                    title: '¡Muy bien!',
+                    message:
+                        'Estuviste muy atento. Sigue practicando, ' +
+                        '¡lo estás logrando!'
+                };
+            }
+
+            return {
+                title: '¡Buen trabajo!',
+                message:
+                    'Terminaste la actividad. Cada intento cuenta y ' +
+                    'puedes volver a intentarlo cuando quieras.'
+            };
         }
 
         function startGame() {
@@ -589,7 +879,7 @@
             gameGrid.replaceChildren();
 
             shuffle(animals).forEach(animal => {
-                gameGrid.appendChild(createCard(animal));
+                gameGrid.appendChild(createAnimalCard(animal));
             });
 
             startButton.textContent = 'Reiniciar';
@@ -605,9 +895,14 @@
             gameActive = false;
             window.clearInterval(timer);
 
+            const encouragement = getEncouragement();
+
+            resultTitle.textContent = encouragement.title;
+            encouragementText.textContent = encouragement.message;
+
             resultText.textContent =
-                `Encontraste los ${totalTargets} perros con ` +
-                `${errors} error(es) en ${seconds} segundo(s).`;
+                `Completaste la actividad en ${seconds} segundo(s) ` +
+                `con ${errors} intento(s) incorrecto(s).`;
 
             resultPanel.hidden = false;
 
@@ -617,6 +912,11 @@
             });
         }
 
+        playAttentionButton.addEventListener('click', showGame);
+        brandButton.addEventListener('click', showMenu);
+        activitiesButton.addEventListener('click', showMenu);
+        backButton.addEventListener('click', showMenu);
+        returnButton.addEventListener('click', showMenu);
         startButton.addEventListener('click', startGame);
         restartButton.addEventListener('click', startGame);
     </script>
