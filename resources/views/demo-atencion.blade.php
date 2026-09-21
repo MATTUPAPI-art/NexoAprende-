@@ -866,7 +866,47 @@
                     'puedes volver a intentarlo cuando quieras.'
             };
         }
+    async function saveResult() {
+    try {
+        const response = await fetch(
+            '{{ route("activity-results.store") }}',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    activity_code: 'attention-dogs',
+                    correct_answers: correctAnswers,
+                    errors: errors,
+                    duration_seconds: Math.max(seconds, 1),
+                    level: 1
+                })
+            }
+        );
 
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error('Error al guardar:', data);
+
+            resultText.textContent +=
+                ' No fue posible guardar el resultado.';
+
+            return;
+        }
+
+        resultText.textContent +=
+            ' Tu resultado fue guardado correctamente.';
+    } catch (error) {
+        console.error('Error de conexión:', error);
+
+        resultText.textContent +=
+            ' No fue posible conectar con el servidor.';
+    }
+}
         function startGame() {
             window.clearInterval(timer);
 
@@ -905,6 +945,7 @@
                 `con ${errors} intento(s) incorrecto(s).`;
 
             resultPanel.hidden = false;
+            saveResult();
 
             resultPanel.scrollIntoView({
                 behavior: 'smooth',
