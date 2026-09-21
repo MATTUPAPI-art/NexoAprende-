@@ -5,9 +5,27 @@ namespace App\Http\Controllers;
 use App\Models\ActivityResult;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class ActivityResultController extends Controller
 {
+    public function index(): View
+    {
+        $results = ActivityResult::query()
+            ->latest()
+            ->limit(20)
+            ->get();
+
+        $summary = [
+            'sessions' => ActivityResult::count(),
+            'best_time' => ActivityResult::min('duration_seconds'),
+            'total_correct' => ActivityResult::sum('correct_answers'),
+            'total_errors' => ActivityResult::sum('errors'),
+        ];
+
+        return view('progress', compact('results', 'summary'));
+    }
+
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([

@@ -678,6 +678,13 @@
                         >
                             Jugar otra vez
                         </button>
+                        <button
+                            id="progressButton"
+                            class="secondary-button"
+                            type="button"
+                        >
+                            Ver mi progreso
+                        </button>
 
                         <button
                             id="returnButton"
@@ -725,6 +732,8 @@
             document.getElementById('playAttentionButton');
         const backButton = document.getElementById('backButton');
         const returnButton = document.getElementById('returnButton');
+        const progressButton =
+            document.getElementById('progressButton');
         const startButton = document.getElementById('startButton');
         const restartButton = document.getElementById('restartButton');
         const gameGrid = document.getElementById('gameGrid');
@@ -866,47 +875,48 @@
                     'puedes volver a intentarlo cuando quieras.'
             };
         }
-    async function saveResult() {
-    try {
-        const response = await fetch(
-            '{{ route("activity-results.store") }}',
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    activity_code: 'attention-dogs',
-                    correct_answers: correctAnswers,
-                    errors: errors,
-                    duration_seconds: Math.max(seconds, 1),
-                    level: 1
-                })
+        async function saveResult() {
+            try {
+                const response = await fetch(
+                    '{{ route("activity-results.store") }}',
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            activity_code: 'attention-dogs',
+                            correct_answers: correctAnswers,
+                            errors: errors,
+                            duration_seconds: Math.max(seconds, 1),
+                            level: 1
+                        })
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    console.error('Error al guardar:', data);
+
+                    resultText.textContent +=
+                        ' No fue posible guardar el resultado.';
+
+                    return;
+                }
+
+                resultText.textContent +=
+                    ' Tu resultado fue guardado correctamente.';
+            } catch (error) {
+                console.error('Error de conexión:', error);
+
+                resultText.textContent +=
+                    ' No fue posible conectar con el servidor.';
             }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            console.error('Error al guardar:', data);
-
-            resultText.textContent +=
-                ' No fue posible guardar el resultado.';
-
-            return;
         }
 
-        resultText.textContent +=
-            ' Tu resultado fue guardado correctamente.';
-    } catch (error) {
-        console.error('Error de conexión:', error);
-
-        resultText.textContent +=
-            ' No fue posible conectar con el servidor.';
-    }
-}
         function startGame() {
             window.clearInterval(timer);
 
@@ -958,6 +968,10 @@
         activitiesButton.addEventListener('click', showMenu);
         backButton.addEventListener('click', showMenu);
         returnButton.addEventListener('click', showMenu);
+        progressButton.addEventListener('click', () => {
+            window.location.href =
+                '{{ route("activity-results.index") }}';
+        });
         startButton.addEventListener('click', startGame);
         restartButton.addEventListener('click', startGame);
     </script>
