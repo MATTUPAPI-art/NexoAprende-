@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Route;
 Route::view('/', 'home')
     ->name('inicio');
 
+Route::view('/panel', 'dashboard')
+    ->middleware('auth')
+    ->name('dashboard');
+
 Route::view('/actividades/atencion', 'demo-atencion')
     ->name('activities.attention');
 
@@ -17,4 +21,6 @@ Route::post(
 Route::get(
     '/progreso',
     [ActivityResultController::class, 'index']
-)->name('activity-results.index');
+)
+    ->middleware('auth')
+    ->name('activity-results.index');
