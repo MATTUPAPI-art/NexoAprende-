@@ -141,7 +141,35 @@
             color: #ffffff;
             background: var(--primary-dark);
         }
+    .navigation .user-name {
+    padding: 9px 11px;
+    color: var(--primary-dark);
+    font-size: 0.9rem;
+    font-weight: 800;
+}
 
+.logout-form {
+    margin: 0;
+}
+
+.logout-button {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--muted);
+    background: #ffffff;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 800;
+}
+
+.logout-button:hover,
+.logout-button:focus-visible {
+    border-color: var(--primary);
+    color: var(--primary-dark);
+    background: var(--primary-light);
+}
         .hero {
             position: relative;
             overflow: hidden;
@@ -658,16 +686,48 @@
             </a>
 
             <nav class="navigation" aria-label="Navegación principal">
-                <a href="#como-funciona">Cómo funciona</a>
-                <a href="#actividad">Actividad</a>
-                <a href="#familias">Para familias</a>
-                <a
-                    class="nav-cta"
-                    href="{{ route('activities.attention') }}"
-                >
-                    Probar actividad
-                </a>
-            </nav>
+    <a href="#como-funciona">Cómo funciona</a>
+    <a href="#actividad">Actividad</a>
+    <a href="#familias">Para familias</a>
+
+    @guest
+        <a href="{{ route('login') }}">
+            Iniciar sesión
+        </a>
+
+        <a
+            class="nav-cta"
+            href="{{ route('register') }}"
+        >
+            Crear cuenta
+        </a>
+    @endguest
+
+    @auth
+        <span class="user-name">
+            Hola, {{ auth()->user()->name }}
+        </span>
+
+        <a
+            class="nav-cta"
+            href="{{ route('activities.attention') }}"
+        >
+            Ir a la actividad
+        </a>
+
+        <form
+            class="logout-form"
+            method="POST"
+            action="{{ route('logout') }}"
+        >
+            @csrf
+
+            <button class="logout-button" type="submit">
+                Cerrar sesión
+            </button>
+        </form>
+    @endauth
+</nav>
         </div>
     </header>
 
