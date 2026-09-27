@@ -353,6 +353,22 @@
     </header>
 
     <main class="container">
+        @if (session('success'))
+    <div
+        role="status"
+        style="
+            margin-bottom: 24px;
+            padding: 16px 18px;
+            border: 1px solid #9ed8b8;
+            border-radius: 14px;
+            color: #146c43;
+            background: #e9f8f0;
+            font-weight: 700;
+        "
+    >
+        {{ session('success') }}
+    </div>
+@endif
         <section class="welcome">
             <div>
                 <p class="eyebrow">Panel del tutor</p>
@@ -378,9 +394,9 @@
             aria-label="Resumen del panel"
         >
             <article class="summary-card">
-                <span>Perfiles infantiles</span>
-                <strong>0</strong>
-            </article>
+    <span>Perfiles infantiles</span>
+    <strong>{{ $profiles->count() }}</strong>
+</article>
 
             <article class="summary-card">
                 <span>Actividades disponibles</span>
@@ -440,16 +456,72 @@
                     niño por separado.
                 </p>
 
-                <div class="empty-profile">
-                    Todavía no tienes perfiles infantiles registrados.
+                @if ($profiles->isEmpty())
+    <div class="empty-profile">
+        Todavía no tienes perfiles infantiles registrados.
+    </div>
+@else
+    <div style="display: grid; gap: 10px; margin-bottom: 18px;">
+        @foreach ($profiles as $profile)
+            <div
+                style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 12px;
+                    padding: 14px;
+                    border: 1px solid var(--border);
+                    border-radius: 13px;
+                    background: #fafaff;
+                "
+            >
+                <div>
+                    <strong>{{ $profile->name }}</strong>
+
+                    <div
+                        style="
+                            margin-top: 4px;
+                            color: var(--muted);
+                            font-size: 0.85rem;
+                        "
+                    >
+                        {{ $profile->age }} años
+                    </div>
                 </div>
 
-                <a
-                    class="secondary-button"
-                    href="{{ route('activity-results.index') }}"
+                <span
+                    style="
+                        padding: 6px 9px;
+                        border-radius: 999px;
+                        color: var(--primary-dark);
+                        background: var(--primary-soft);
+                        font-size: 0.78rem;
+                        font-weight: 800;
+                    "
                 >
-                    Ver historial actual
-                </a>
+                    Perfil
+                </span>
+            </div>
+        @endforeach
+    </div>
+@endif
+
+<div style="display: grid; gap: 10px;">
+    <a
+        class="primary-button"
+        style="justify-content: center;"
+        href="{{ route('child-profiles.create') }}"
+    >
+        Crear perfil infantil
+    </a>
+
+    <a
+        class="secondary-button"
+        href="{{ route('activity-results.index') }}"
+    >
+        Ver historial actual
+    </a>
+</div>
             </aside>
         </section>
     </main>
