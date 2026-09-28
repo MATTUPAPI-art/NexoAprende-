@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ActivityResult extends Model
 {
@@ -16,6 +17,19 @@ class ActivityResult extends Model
         'completed',
     ];
 
+    /**
+     * Perfil infantil al que pertenece el resultado.
+     */
+    public function childProfile(): BelongsTo
+    {
+        return $this->belongsTo(ChildProfile::class);
+    }
+
+    /**
+     * Conversiones de atributos.
+     *
+     * @return array<string, string>
+     */
     protected function casts(): array
     {
         return [

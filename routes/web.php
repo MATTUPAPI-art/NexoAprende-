@@ -7,13 +7,23 @@ use Illuminate\Support\Facades\Route;
 Route::view('/', 'home')
     ->name('inicio');
 
+/*
+|--------------------------------------------------------------------------
+| Demostración pública
+|--------------------------------------------------------------------------
+|
+| Permite conocer la actividad, pero no guarda resultados.
+|
+*/
+
 Route::view('/actividades/atencion', 'demo-atencion')
     ->name('activities.attention');
 
-Route::post(
-    '/resultados-actividad',
-    [ActivityResultController::class, 'store']
-)->name('activity-results.store');
+/*
+|--------------------------------------------------------------------------
+| Área privada del tutor
+|--------------------------------------------------------------------------
+*/
 
 Route::middleware('auth')->group(function () {
     Route::get(
@@ -32,7 +42,17 @@ Route::middleware('auth')->group(function () {
     )->name('child-profiles.store');
 
     Route::get(
-        '/progreso',
+        '/perfiles/{childProfile}/actividades/atencion',
+        [ChildProfileController::class, 'activity']
+    )->name('child-profiles.activities.attention');
+
+    Route::post(
+        '/resultados-actividad',
+        [ActivityResultController::class, 'store']
+    )->name('activity-results.store');
+
+    Route::get(
+        '/perfiles/{childProfile}/progreso',
         [ActivityResultController::class, 'index']
-    )->name('activity-results.index');
+    )->name('child-profiles.progress');
 });

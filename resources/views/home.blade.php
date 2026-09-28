@@ -708,12 +708,12 @@
             Hola, {{ auth()->user()->name }}
         </span>
 
-        <a
-            class="nav-cta"
-            href="{{ route('activities.attention') }}"
-        >
-            Ir a la actividad
-        </a>
+       <a
+    class="nav-cta"
+    href="{{ route('dashboard') }}"
+>
+    Mi panel
+</a>
 
         <form
             class="logout-form"

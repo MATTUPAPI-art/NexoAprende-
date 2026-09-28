@@ -436,15 +436,22 @@
 
                     <a
                         class="primary-button"
-                        href="{{ route('activities.attention') }}"
+                        href="{{ $profiles->isNotEmpty()
+                            ? route(
+                                'child-profiles.activities.attention',
+                                $profiles->first()
+                            )
+                            : route('child-profiles.create') }}"
                     >
-                        Comenzar
+                        {{ $profiles->isNotEmpty()
+                            ? 'Comenzar'
+                            : 'Crear un perfil' }}
                     </a>
                 </div>
 
                 <div class="next-step">
-                    Próximamente cada resultado será asociado al perfil
-                    infantil que el tutor seleccione.
+                    Selecciona un perfil infantil para que cada resultado
+                    quede guardado en su historial correspondiente.
                 </div>
             </article>
 
@@ -456,72 +463,104 @@
                     niño por separado.
                 </p>
 
-                @if ($profiles->isEmpty())
+
+    @if ($profiles->isEmpty())
     <div class="empty-profile">
         Todavía no tienes perfiles infantiles registrados.
     </div>
 @else
-    <div style="display: grid; gap: 10px; margin-bottom: 18px;">
+    <div
+        style="
+            display: grid;
+            gap: 12px;
+            margin-bottom: 18px;
+        "
+    >
         @foreach ($profiles as $profile)
-            <div
+            <article
                 style="
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    gap: 12px;
-                    padding: 14px;
+                    padding: 15px;
                     border: 1px solid var(--border);
-                    border-radius: 13px;
+                    border-radius: 14px;
                     background: #fafaff;
                 "
             >
-                <div>
-                    <strong>{{ $profile->name }}</strong>
-
-                    <div
-                        style="
-                            margin-top: 4px;
-                            color: var(--muted);
-                            font-size: 0.85rem;
-                        "
-                    >
-                        {{ $profile->age }} años
-                    </div>
-                </div>
-
-                <span
+                <div
                     style="
-                        padding: 6px 9px;
-                        border-radius: 999px;
-                        color: var(--primary-dark);
-                        background: var(--primary-soft);
-                        font-size: 0.78rem;
-                        font-weight: 800;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 12px;
+                        margin-bottom: 13px;
                     "
                 >
-                    Perfil
-                </span>
-            </div>
+                    <div>
+                        <strong>{{ $profile->name }}</strong>
+
+                        <div
+                            style="
+                                margin-top: 4px;
+                                color: var(--muted);
+                                font-size: 0.85rem;
+                            "
+                        >
+                            {{ $profile->age }} años
+                        </div>
+                    </div>
+
+                    <span
+                        style="
+                            padding: 6px 9px;
+                            border-radius: 999px;
+                            color: var(--primary-dark);
+                            background: var(--primary-soft);
+                            font-size: 0.78rem;
+                            font-weight: 800;
+                        "
+                    >
+                        Perfil
+                    </span>
+                </div>
+
+                <div
+                    style="
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 8px;
+                    "
+                >
+                    <a
+                        class="primary-button"
+                        style="justify-content: center;"
+                        href="{{ route(
+                            'child-profiles.activities.attention',
+                            $profile
+                        ) }}"
+                    >
+                        Jugar
+                    </a>
+
+                    <a
+                        class="secondary-button"
+                        href="{{ route(
+                            'child-profiles.progress',
+                            $profile
+                        ) }}"
+                    >
+                        Ver progreso
+                    </a>
+                </div>
+            </article>
         @endforeach
     </div>
 @endif
 
-<div style="display: grid; gap: 10px;">
-    <a
-        class="primary-button"
-        style="justify-content: center;"
-        href="{{ route('child-profiles.create') }}"
-    >
-        Crear perfil infantil
-    </a>
-
-    <a
-        class="secondary-button"
-        href="{{ route('activity-results.index') }}"
-    >
-        Ver historial actual
-    </a>
-</div>
+<a
+    class="secondary-button"
+    href="{{ route('child-profiles.create') }}"
+>
+    Crear otro perfil
+</a>
             </aside>
         </section>
     </main>

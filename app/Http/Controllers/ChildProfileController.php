@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ChildProfile;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -58,5 +59,21 @@ class ChildProfileController extends Controller
                 'success',
                 'Perfil infantil creado correctamente.'
             );
+    }
+
+    /**
+     * Abrir la actividad para un perfil del tutor.
+     */
+    public function activity(
+        Request $request,
+        int $childProfile
+    ): View {
+        $profile = $request->user()
+            ->childProfiles()
+            ->findOrFail($childProfile);
+
+        return view('demo-atencion', [
+            'childProfile' => $profile,
+        ]);
     }
 }

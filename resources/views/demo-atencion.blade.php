@@ -705,6 +705,8 @@
     </main>
 
     <script>
+        const selectedChildProfileId =
+            @json(isset($childProfile) ? $childProfile->id : null);
         const animals = [
             { symbol: '🐶', label: 'Perro', target: true },
             { symbol: '🐶', label: 'Perro', target: true },
@@ -876,6 +878,13 @@
             };
         }
         async function saveResult() {
+            if (selectedChildProfileId === null) {
+                resultText.textContent +=
+                    ' Esta fue una demostración y el resultado no se guardó.';
+
+                return;
+            }
+
             try {
                 const response = await fetch(
                     '{{ route("activity-results.store") }}',
@@ -887,6 +896,7 @@
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
                         body: JSON.stringify({
+                            child_profile_id: selectedChildProfileId,
                             activity_code: 'attention-dogs',
                             correct_answers: correctAnswers,
                             errors: errors,
@@ -969,8 +979,12 @@
         backButton.addEventListener('click', showMenu);
         returnButton.addEventListener('click', showMenu);
         progressButton.addEventListener('click', () => {
-            window.location.href =
-                '{{ route("activity-results.index") }}';
+            @if (isset($childProfile))
+                window.location.href =
+                    '{{ route("child-profiles.progress", $childProfile) }}';
+            @else
+                window.location.href = '{{ route("login") }}';
+            @endif
         });
         startButton.addEventListener('click', startGame);
         restartButton.addEventListener('click', startGame);

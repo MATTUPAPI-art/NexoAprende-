@@ -205,13 +205,13 @@
         <nav class="top-bar" aria-label="Navegación principal">
             <h1 class="brand">NexoAprende</h1>
 
-            <a class="back-button" href="{{ url('/') }}">
-                Volver a las actividades
+            <a class="back-button" href="{{ route('dashboard') }}">
+                Volver al panel
             </a>
         </nav>
 
         <header class="header">
-            <h2>Mi progreso</h2>
+            <h2>Progreso de {{ $childProfile->name }}</h2>
 
             <p>
                 Aquí puedes revisar los resultados obtenidos durante
