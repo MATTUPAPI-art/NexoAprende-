@@ -63,13 +63,13 @@ class ActivityResultController extends Controller
             'activity_code' => [
                 'required',
                 'string',
-                'in:attention-dogs',
+                'in:attention-dogs,memory-pairs',
             ],
             'correct_answers' => [
                 'required',
                 'integer',
                 'min:0',
-                'max:4',
+                'max:6',
             ],
             'errors' => [
                 'required',

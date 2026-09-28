@@ -289,6 +289,12 @@
             line-height: 1.5;
         }
 
+        .profile-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
         @media (max-width: 820px) {
             .summary-grid,
             .content-grid {
@@ -320,6 +326,10 @@
             .primary-button {
                 width: 100%;
                 justify-content: center;
+            }
+
+            .profile-actions {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -400,12 +410,12 @@
 
             <article class="summary-card">
                 <span>Actividades disponibles</span>
-                <strong>1</strong>
+                <strong>2</strong>
             </article>
 
             <article class="summary-card">
-                <span>Área disponible</span>
-                <strong>Atención</strong>
+                <span>Áreas disponibles</span>
+                <strong>Atención y memoria</strong>
             </article>
         </section>
 
@@ -434,18 +444,30 @@
                         </div>
                     </div>
 
-                    <a
-                        class="primary-button"
-                        href="{{ $profiles->isNotEmpty()
-                            ? route(
-                                'child-profiles.activities.attention',
-                                $profiles->first()
-                            )
-                            : route('child-profiles.create') }}"
-                    >
-                        {{ $profiles->isNotEmpty()
-                            ? 'Comenzar'
-                            : 'Crear un perfil' }}
+                    <a class="primary-button" href="#perfiles">
+                        Elegir perfil
+                    </a>
+                </div>
+
+                <div class="activity" style="margin-top: 12px;">
+                    <div class="activity-info">
+                        <span
+                            class="activity-icon"
+                            aria-hidden="true"
+                        >
+                            🧠
+                        </span>
+
+                        <div>
+                            <h3>Encuentra las parejas</h3>
+                            <p>
+                                Actividad de memoria visual · Nivel 1
+                            </p>
+                        </div>
+                    </div>
+
+                    <a class="primary-button" href="#perfiles">
+                        Elegir perfil
                     </a>
                 </div>
 
@@ -455,7 +477,7 @@
                 </div>
             </article>
 
-            <aside class="panel-card">
+            <aside class="panel-card" id="perfiles">
                 <h2>Perfiles infantiles</h2>
 
                 <p class="panel-description">
@@ -522,13 +544,7 @@
                     </span>
                 </div>
 
-                <div
-                    style="
-                        display: grid;
-                        grid-template-columns: 1fr 1fr;
-                        gap: 8px;
-                    "
-                >
+                <div class="profile-actions">
                     <a
                         class="primary-button"
                         style="justify-content: center;"
@@ -537,7 +553,18 @@
                             $profile
                         ) }}"
                     >
-                        Jugar
+                        Atención
+                    </a>
+
+                    <a
+                        class="primary-button"
+                        style="justify-content: center;"
+                        href="{{ route(
+                            'child-profiles.activities.memory',
+                            $profile
+                        ) }}"
+                    >
+                        Memoria
                     </a>
 
                     <a

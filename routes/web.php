@@ -46,6 +46,11 @@ Route::middleware('auth')->group(function () {
         [ChildProfileController::class, 'activity']
     )->name('child-profiles.activities.attention');
 
+    Route::get(
+        '/perfiles/{childProfile}/actividades/memoria',
+        [ChildProfileController::class, 'memoryActivity']
+    )->name('child-profiles.activities.memory');
+
     Route::post(
         '/resultados-actividad',
         [ActivityResultController::class, 'store']

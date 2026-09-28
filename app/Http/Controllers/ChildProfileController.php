@@ -76,4 +76,20 @@ class ChildProfileController extends Controller
             'childProfile' => $profile,
         ]);
     }
+
+    /**
+     * Abrir la actividad de memoria para un perfil del tutor.
+     */
+    public function memoryActivity(
+        Request $request,
+        int $childProfile
+    ): View {
+        $profile = $request->user()
+            ->childProfiles()
+            ->findOrFail($childProfile);
+
+        return view('demo-memoria', [
+            'childProfile' => $profile,
+        ]);
+    }
 }

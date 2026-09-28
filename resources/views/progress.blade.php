@@ -269,6 +269,21 @@
 
                     <tbody>
                         @forelse ($results as $result)
+                            @php
+                                $activityName = match (
+                                    $result->activity_code
+                                ) {
+                                    'memory-pairs' => 'Encuentra las parejas',
+                                    default => 'Encuentra los perros',
+                                };
+
+                                $activityGoal = match (
+                                    $result->activity_code
+                                ) {
+                                    'memory-pairs' => 6,
+                                    default => 4,
+                                };
+                            @endphp
                             <tr>
                                 <td>
                                     {{ $result->created_at
@@ -277,11 +292,11 @@
                                 </td>
 
                                 <td>
-                                    Encuentra los perros
+                                    {{ $activityName }}
                                 </td>
 
                                 <td>
-                                    {{ $result->correct_answers }} / 4
+                                    {{ $result->correct_answers }} / {{ $activityGoal }}
                                 </td>
 
                                 <td>{{ $result->errors }}</td>
