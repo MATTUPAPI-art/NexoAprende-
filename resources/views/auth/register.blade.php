@@ -478,7 +478,13 @@
                         Iniciar sesión
                     </a>
                 </p>
+                <p class="login-text">
+                    ¿Eres un profesional?
 
+                    <a href="{{ route('professional.register') }}">
+                        Crear cuenta profesional
+                    </a>
+                </p>
                 <p class="privacy-notice">
                     La cuenta pertenece al tutor. Los perfiles infantiles
                     serán administrados posteriormente desde un espacio

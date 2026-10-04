@@ -10,10 +10,18 @@ use Illuminate\View\View;
 class ChildProfileController extends Controller
 {
     /**
-     * Panel del tutor con sus propios perfiles.
+     * Panel correspondiente al usuario autenticado.
      */
-    public function index(Request $request): View
-    {
+    public function index(
+        Request $request
+    ): View|RedirectResponse {
+        if ($request->user()->isProfessional()) {
+            return redirect()
+                ->route('professional.dashboard');
+        }
+
+        $this->ensureTutor($request);
+
         $profiles = $request->user()
             ->childProfiles()
             ->latest()
@@ -25,8 +33,10 @@ class ChildProfileController extends Controller
     /**
      * Formulario para crear un perfil infantil.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
+        $this->ensureTutor($request);
+
         return view('child-profiles.create');
     }
 
@@ -35,6 +45,8 @@ class ChildProfileController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $this->ensureTutor($request);
+
         $validated = $request->validate([
             'name' => [
                 'required',
@@ -62,12 +74,14 @@ class ChildProfileController extends Controller
     }
 
     /**
-     * Abrir la actividad para un perfil del tutor.
+     * Abrir la actividad de atención.
      */
     public function activity(
         Request $request,
         int $childProfile
     ): View {
+        $this->ensureTutor($request);
+
         $profile = $request->user()
             ->childProfiles()
             ->findOrFail($childProfile);
@@ -78,12 +92,14 @@ class ChildProfileController extends Controller
     }
 
     /**
-     * Abrir la actividad de memoria para un perfil del tutor.
+     * Abrir la actividad de memoria.
      */
     public function memoryActivity(
         Request $request,
         int $childProfile
     ): View {
+        $this->ensureTutor($request);
+
         $profile = $request->user()
             ->childProfiles()
             ->findOrFail($childProfile);
@@ -91,5 +107,16 @@ class ChildProfileController extends Controller
         return view('demo-memoria', [
             'childProfile' => $profile,
         ]);
+    }
+
+    /**
+     * Permitir estas acciones solamente a tutores.
+     */
+    private function ensureTutor(Request $request): void
+    {
+        abort_unless(
+            $request->user()->isTutor(),
+            403
+        );
     }
 }

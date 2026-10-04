@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ActivityResultController;
 use App\Http\Controllers\ChildProfileController;
+use App\Http\Controllers\ProfessionalProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')
@@ -11,9 +12,6 @@ Route::view('/', 'home')
 |--------------------------------------------------------------------------
 | Demostración pública
 |--------------------------------------------------------------------------
-|
-| Permite conocer la actividad, pero no guarda resultados.
-|
 */
 
 Route::view('/actividades/atencion', 'demo-atencion')
@@ -21,7 +19,25 @@ Route::view('/actividades/atencion', 'demo-atencion')
 
 /*
 |--------------------------------------------------------------------------
-| Área privada del tutor
+| Registro profesional
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('guest')->group(function () {
+    Route::get(
+        '/registro-profesional',
+        [ProfessionalProfileController::class, 'create']
+    )->name('professional.register');
+
+    Route::post(
+        '/registro-profesional',
+        [ProfessionalProfileController::class, 'store']
+    )->name('professional.register.store');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Área privada
 |--------------------------------------------------------------------------
 */
 
@@ -30,6 +46,11 @@ Route::middleware('auth')->group(function () {
         '/panel',
         [ChildProfileController::class, 'index']
     )->name('dashboard');
+
+    Route::get(
+        '/panel-profesional',
+        [ProfessionalProfileController::class, 'dashboard']
+    )->name('professional.dashboard');
 
     Route::get(
         '/perfiles/crear',

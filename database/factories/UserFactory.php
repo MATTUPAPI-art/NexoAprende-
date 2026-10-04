@@ -30,11 +30,32 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'role' => 'tutor',
         ];
     }
 
     /**
-     * Indicate that the model's email address should be unverified.
+     * Crear explícitamente un usuario tutor.
+     */
+    public function tutor(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'tutor',
+        ]);
+    }
+
+    /**
+     * Crear explícitamente un usuario profesional.
+     */
+    public function professional(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'professional',
+        ]);
+    }
+
+    /**
+     * Indicar que el correo no está verificado.
      */
     public function unverified(): static
     {
