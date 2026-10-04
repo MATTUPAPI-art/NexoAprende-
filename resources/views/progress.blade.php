@@ -270,17 +270,19 @@
                     <tbody>
                         @forelse ($results as $result)
                             @php
-                                $activityName = match (
+                                                               $activityName = match (
                                     $result->activity_code
                                 ) {
                                     'memory-pairs' => 'Encuentra las parejas',
+                                    'reading-story' => 'Completa la historia',
                                     default => 'Encuentra los perros',
                                 };
 
-                                $activityGoal = match (
+                                                                $activityGoal = match (
                                     $result->activity_code
                                 ) {
                                     'memory-pairs' => 6,
+                                    'reading-story' => 5,
                                     default => 4,
                                 };
                             @endphp

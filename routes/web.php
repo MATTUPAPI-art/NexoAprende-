@@ -8,12 +8,6 @@ use Illuminate\Support\Facades\Route;
 Route::view('/', 'home')
     ->name('inicio');
 
-/*
-|--------------------------------------------------------------------------
-| Demostración pública
-|--------------------------------------------------------------------------
-*/
-
 Route::view('/actividades/atencion', 'demo-atencion')
     ->name('activities.attention');
 
@@ -71,6 +65,11 @@ Route::middleware('auth')->group(function () {
         '/perfiles/{childProfile}/actividades/memoria',
         [ChildProfileController::class, 'memoryActivity']
     )->name('child-profiles.activities.memory');
+
+    Route::get(
+        '/perfiles/{childProfile}/actividades/lectura',
+        [ChildProfileController::class, 'readingActivity']
+    )->name('child-profiles.activities.reading');
 
     Route::post(
         '/resultados-actividad',

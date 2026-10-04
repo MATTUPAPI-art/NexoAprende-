@@ -410,12 +410,12 @@
 
             <article class="summary-card">
                 <span>Actividades disponibles</span>
-                <strong>2</strong>
+                <strong>3</strong>
             </article>
 
             <article class="summary-card">
                 <span>Áreas disponibles</span>
-                <strong>Atención y memoria</strong>
+                <strong>Atención, memoria y lectura</strong>
             </article>
         </section>
 
@@ -470,7 +470,28 @@
                         Elegir perfil
                     </a>
                 </div>
+                <div class="activity" style="margin-top: 12px;">
+                    <div class="activity-info">
+                        <span
+                            class="activity-icon"
+                            aria-hidden="true"
+                        >
+                            📖
+                        </span>
 
+                        <div>
+                            <h3>Completa la historia</h3>
+
+                            <p>
+                                Actividad de lectura comprensiva · Nivel 1
+                            </p>
+                        </div>
+                    </div>
+
+                    <a class="primary-button" href="#perfiles">
+                        Elegir perfil
+                    </a>
+                </div>
                 <div class="next-step">
                     Selecciona un perfil infantil para que cada resultado
                     quede guardado en su historial correspondiente.
@@ -566,7 +587,16 @@
                     >
                         Memoria
                     </a>
-
+                    <a
+                        class="primary-button"
+                        style="justify-content: center;"
+                        href="{{ route(
+                            'child-profiles.activities.reading',
+                            $profile
+                        ) }}"
+                    >
+                        Lectura
+                    </a>
                     <a
                         class="secondary-button"
                         href="{{ route(

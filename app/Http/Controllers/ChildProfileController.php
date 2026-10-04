@@ -41,7 +41,7 @@ class ChildProfileController extends Controller
     }
 
     /**
-     * Guardar el perfil para el tutor autenticado.
+     * Guardar un perfil infantil.
      */
     public function store(Request $request): RedirectResponse
     {
@@ -110,7 +110,25 @@ class ChildProfileController extends Controller
     }
 
     /**
-     * Permitir estas acciones solamente a tutores.
+     * Abrir la actividad de lectura.
+     */
+    public function readingActivity(
+        Request $request,
+        int $childProfile
+    ): View {
+        $this->ensureTutor($request);
+
+        $profile = $request->user()
+            ->childProfiles()
+            ->findOrFail($childProfile);
+
+        return view('demo-lectura', [
+            'childProfile' => $profile,
+        ]);
+    }
+
+    /**
+     * Permitir estas acciones únicamente a tutores.
      */
     private function ensureTutor(Request $request): void
     {

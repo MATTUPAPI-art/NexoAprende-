@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class ActivityResultController extends Controller
@@ -15,6 +16,11 @@ class ActivityResultController extends Controller
         Request $request,
         int $childProfile
     ): View {
+        abort_unless(
+            $request->user()->isTutor(),
+            403
+        );
+
         $profile = $request->user()
             ->childProfiles()
             ->findOrFail($childProfile);
@@ -55,6 +61,11 @@ class ActivityResultController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        abort_unless(
+            $request->user()->isTutor(),
+            403
+        );
+
         $validated = $request->validate([
             'child_profile_id' => [
                 'required',
@@ -63,7 +74,11 @@ class ActivityResultController extends Controller
             'activity_code' => [
                 'required',
                 'string',
-                'in:attention-dogs,memory-pairs',
+                Rule::in([
+                    'attention-dogs',
+                    'memory-pairs',
+                    'reading-story',
+                ]),
             ],
             'correct_answers' => [
                 'required',
