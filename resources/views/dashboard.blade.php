@@ -606,6 +606,15 @@
                     >
                         Ver progreso
                     </a>
+                                        <a
+                        class="secondary-button"
+                        href="{{ route(
+                            'child-profiles.professionals',
+                            $profile
+                        ) }}"
+                    >
+                        Profesionales
+                    </a>
                 </div>
             </article>
         @endforeach

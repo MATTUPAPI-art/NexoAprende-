@@ -314,15 +314,67 @@
             <section class="card">
                 <h2>Perfiles infantiles autorizados</h2>
 
-                <div class="empty-state">
-                    Todavía no tienes perfiles infantiles asignados.
+                                @forelse ($professional->childProfiles as $profile)
+                    <article
+                        style="
+                            margin-bottom: 14px;
+                            padding: 18px;
+                            border: 1px solid var(--border);
+                            border-radius: 14px;
+                            background: var(--background);
+                        "
+                    >
+                        <div style="margin-bottom: 14px;">
+                            <strong
+                                style="
+                                    display: block;
+                                    margin-bottom: 6px;
+                                    font-size: 1.08rem;
+                                "
+                            >
+                                {{ $profile->name }}
+                            </strong>
 
-                    <br><br>
+                            <span
+                                style="
+                                    display: block;
+                                    color: var(--muted);
+                                    line-height: 1.5;
+                                "
+                            >
+                                {{ $profile->age }} años · Tutor:
+                                {{ $profile->user->name }}
+                            </span>
+                        </div>
 
-                    Más adelante, el tutor podrá autorizar de manera
-                    explícita qué profesional puede consultar el progreso
-                    del niño.
-                </div>
+                        <a
+                            href="{{ route(
+                                'professional.child-profiles.progress',
+                                $profile
+                            ) }}"
+                            style="
+                                display: inline-flex;
+                                padding: 11px 15px;
+                                border-radius: 10px;
+                                color: #ffffff;
+                                background: var(--primary);
+                                font-weight: 800;
+                                text-decoration: none;
+                            "
+                        >
+                            Consultar progreso
+                        </a>
+                    </article>
+                @empty
+                    <div class="empty-state">
+                        Todavía no tienes perfiles infantiles autorizados.
+
+                        <br><br>
+
+                        El tutor debe autorizar tu acceso desde el panel
+                        correspondiente al perfil infantil.
+                    </div>
+                @endforelse
             </section>
         </div>
 

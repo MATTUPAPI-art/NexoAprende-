@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 #[Fillable([
     'specialty',
@@ -23,11 +24,28 @@ class ProfessionalProfile extends Model
         ];
     }
 
+    /**
+     * Cuenta perteneciente al profesional.
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Perfiles infantiles autorizados.
+     */
+    public function childProfiles(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            ChildProfile::class,
+            'child_profile_professional'
+        )->withTimestamps();
+    }
+
+    /**
+     * Limpiar espacios innecesarios en la especialidad.
+     */
     protected function specialty(): Attribute
     {
         return Attribute::make(

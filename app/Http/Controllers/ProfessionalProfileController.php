@@ -15,17 +15,11 @@ use Illuminate\View\View;
 
 class ProfessionalProfileController extends Controller
 {
-    /**
-     * Mostrar el formulario de registro profesional.
-     */
     public function create(): View
     {
         return view('auth.register-professional');
     }
 
-    /**
-     * Registrar una nueva cuenta profesional.
-     */
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -99,9 +93,6 @@ class ProfessionalProfileController extends Controller
             );
     }
 
-    /**
-     * Mostrar el panel del profesional autenticado.
-     */
     public function dashboard(Request $request): View
     {
         abort_unless(
@@ -112,6 +103,14 @@ class ProfessionalProfileController extends Controller
         $professional = $request->user()
             ->professionalProfile()
             ->firstOrFail();
+
+        $professional->load([
+            'childProfiles' => function ($query) {
+                $query
+                    ->with('user:id,name')
+                    ->orderBy('name');
+            },
+        ]);
 
         return view(
             'professional-dashboard',

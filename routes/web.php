@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ActivityResultController;
 use App\Http\Controllers\ChildProfileController;
+use App\Http\Controllers\ProfessionalAccessController;
 use App\Http\Controllers\ProfessionalProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -56,6 +57,12 @@ Route::middleware('auth')->group(function () {
         [ChildProfileController::class, 'store']
     )->name('child-profiles.store');
 
+    /*
+    |--------------------------------------------------------------------------
+    | Actividades infantiles
+    |--------------------------------------------------------------------------
+    */
+
     Route::get(
         '/perfiles/{childProfile}/actividades/atencion',
         [ChildProfileController::class, 'activity']
@@ -71,6 +78,12 @@ Route::middleware('auth')->group(function () {
         [ChildProfileController::class, 'readingActivity']
     )->name('child-profiles.activities.reading');
 
+    /*
+    |--------------------------------------------------------------------------
+    | Resultados y progreso
+    |--------------------------------------------------------------------------
+    */
+
     Route::post(
         '/resultados-actividad',
         [ActivityResultController::class, 'store']
@@ -80,4 +93,30 @@ Route::middleware('auth')->group(function () {
         '/perfiles/{childProfile}/progreso',
         [ActivityResultController::class, 'index']
     )->name('child-profiles.progress');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Autorizaciones profesionales
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/perfiles/{childProfile}/profesionales',
+        [ProfessionalAccessController::class, 'manage']
+    )->name('child-profiles.professionals');
+
+    Route::post(
+        '/perfiles/{childProfile}/profesionales',
+        [ProfessionalAccessController::class, 'store']
+    )->name('child-profiles.professionals.store');
+
+    Route::delete(
+        '/perfiles/{childProfile}/profesionales/{professionalProfile}',
+        [ProfessionalAccessController::class, 'destroy']
+    )->name('child-profiles.professionals.destroy');
+
+    Route::get(
+        '/panel-profesional/perfiles/{childProfile}/progreso',
+        [ProfessionalAccessController::class, 'progress']
+    )->name('professional.child-profiles.progress');
 });
