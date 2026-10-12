@@ -290,10 +290,23 @@
         }
 
         .profile-actions {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-        }
+    display: grid;
+    grid-template-columns: repeat(
+        2,
+        minmax(0, 1fr)
+    );
+    gap: 8px;
+}
+
+.profile-actions .primary-button,
+.profile-actions .secondary-button {
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+    padding: 10px 8px;
+    text-align: center;
+    white-space: normal;
+}
 .profiles-list {
     display: grid;
     gap: 14px;
@@ -449,8 +462,45 @@
             }
 
             .profile-actions {
-                grid-template-columns: 1fr;
-            }
+    display: grid;
+    grid-template-columns: repeat(
+        2,
+        minmax(0, 1fr)
+    );
+    gap: 8px;
+}
+
+.profile-actions .primary-button,
+.profile-actions .secondary-button {
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+    padding: 10px 8px;
+    text-align: center;
+    white-space: normal;
+}
+
+.danger-button {
+    display: inline-flex;
+    width: 100%;
+    min-width: 0;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 8px;
+    border: 1px solid #f1aaa5;
+    border-radius: 11px;
+    color: #b42318;
+    background: #fff1f0;
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-align: center;
+    text-decoration: none;
+}
+
+.danger-button:hover {
+    color: #ffffff;
+    background: #b42318;
+}
         }
         @media (max-width: 620px) {
     .profile-header {
@@ -461,6 +511,90 @@
     .stage-badge {
         margin-left: 60px;
         white-space: normal;
+    }
+}
+
+    /* Acciones organizadas de cada perfil */
+.profile-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.profile-actions a {
+    display: inline-flex;
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 10px 8px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    font-size: 0.86rem;
+    font-weight: 800;
+    line-height: 1.25;
+    text-align: center;
+    text-decoration: none;
+    white-space: normal;
+    transition:
+        color 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.profile-actions a:hover {
+    transform: translateY(-1px);
+}
+
+/* Actividades */
+.profile-actions .primary-button {
+    border: 1px solid var(--stage-color);
+    color: #ffffff;
+    background: var(--stage-color);
+}
+
+.profile-actions .primary-button:hover {
+    border-color: var(--stage-dark);
+    color: #ffffff;
+    background: var(--stage-dark);
+}
+
+/* Administración */
+.profile-actions .secondary-button {
+    border: 1px solid #d9d5ff;
+    color: var(--primary-dark);
+    background: #f7f6ff;
+}
+
+.profile-actions .secondary-button:hover {
+    border-color: var(--primary);
+    color: #ffffff;
+    background: var(--primary);
+}
+
+/* Eliminar siempre ocupa todo el ancho */
+.profile-actions .danger-button {
+    grid-column: 1 / -1;
+    border: 1px solid #f1aaa5;
+    color: #b42318;
+    background: #fff1f0;
+}
+
+.profile-actions .danger-button:hover {
+    border-color: #b42318;
+    color: #ffffff;
+    background: #b42318;
+}
+
+@media (max-width: 430px) {
+    .profile-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-actions .danger-button {
+        grid-column: auto;
     }
 }
     </style>
@@ -689,56 +823,76 @@
                 </p>
 
                 <div class="profile-actions">
-                    <a
-                        class="primary-button"
-                        href="{{ route(
-                            'child-profiles.activities.attention',
-                            $profile
-                        ) }}"
-                    >
-                        Atención
-                    </a>
+    <a
+        class="primary-button"
+        href="{{ route(
+            'child-profiles.activities.attention',
+            $profile
+        ) }}"
+    >
+        Atención
+    </a>
 
-                    <a
-                        class="primary-button"
-                        href="{{ route(
-                            'child-profiles.activities.memory',
-                            $profile
-                        ) }}"
-                    >
-                        Memoria
-                    </a>
+    <a
+        class="primary-button"
+        href="{{ route(
+            'child-profiles.activities.memory',
+            $profile
+        ) }}"
+    >
+        Memoria
+    </a>
 
-                    <a
-                        class="primary-button"
-                        href="{{ route(
-                            'child-profiles.activities.reading',
-                            $profile
-                        ) }}"
-                    >
-                        Lectura
-                    </a>
+    <a
+        class="primary-button"
+        href="{{ route(
+            'child-profiles.activities.reading',
+            $profile
+        ) }}"
+    >
+        Lectura
+    </a>
 
-                    <a
-                        class="secondary-button"
-                        href="{{ route(
-                            'child-profiles.progress',
-                            $profile
-                        ) }}"
-                    >
-                        Ver progreso
-                    </a>
+    <a
+        class="secondary-button"
+        href="{{ route(
+            'child-profiles.progress',
+            $profile
+        ) }}"
+    >
+        Ver progreso
+    </a>
 
-                    <a
-                        class="secondary-button"
-                        href="{{ route(
-                            'child-profiles.professionals',
-                            $profile
-                        ) }}"
-                    >
-                        Profesionales
-                    </a>
-                </div>
+    <a
+        class="secondary-button"
+        href="{{ route(
+            'child-profiles.professionals',
+            $profile
+        ) }}"
+    >
+        Profesionales
+    </a>
+
+    <a
+        class="secondary-button"
+        href="{{ route(
+            'child-profiles.edit',
+            $profile
+        ) }}"
+    >
+        Editar perfil
+    </a>
+
+    <a
+        class="danger-button"
+        href="{{ route(
+            'child-profiles.delete',
+            $profile
+        ) }}"
+    >
+        Eliminar perfil
+    </a>
+</div>
             </article>
         @endforeach
     </div>

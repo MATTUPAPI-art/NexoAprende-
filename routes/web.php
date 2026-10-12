@@ -56,7 +56,25 @@ Route::middleware('auth')->group(function () {
         '/perfiles',
         [ChildProfileController::class, 'store']
     )->name('child-profiles.store');
+Route::get(
+    '/perfiles/{childProfile}/editar',
+    [ChildProfileController::class, 'edit']
+)->name('child-profiles.edit');
 
+Route::put(
+    '/perfiles/{childProfile}',
+    [ChildProfileController::class, 'update']
+)->name('child-profiles.update');
+
+Route::get(
+    '/perfiles/{childProfile}/eliminar',
+    [ChildProfileController::class, 'confirmDestroy']
+)->name('child-profiles.delete');
+
+Route::delete(
+    '/perfiles/{childProfile}',
+    [ChildProfileController::class, 'destroy']
+)->name('child-profiles.destroy');
     /*
     |--------------------------------------------------------------------------
     | Actividades infantiles
