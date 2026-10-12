@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ProgressInsights;
 use App\Models\ProfessionalProfile;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -111,52 +112,41 @@ class ProfessionalAccessController extends Controller
      * Mostrar al profesional el progreso de un niño autorizado.
      */
     public function progress(
-        Request $request,
-        int $childProfile
-    ): View {
-        abort_unless(
-            $request->user()->isProfessional(),
-            403
-        );
+    Request $request,
+    int $childProfile,
+    ProgressInsights $progressInsights
+): View {
+    abort_unless(
+        $request->user()->isProfessional(),
+        403
+    );
 
-        $professional = $request->user()
-            ->professionalProfile()
-            ->firstOrFail();
+    $professional = $request->user()
+        ->professionalProfile()
+        ->firstOrFail();
 
-        $profile = $professional
-            ->childProfiles()
-            ->findOrFail($childProfile);
+    $profile = $professional
+        ->childProfiles()
+        ->findOrFail($childProfile);
 
-        $results = $profile
-            ->activityResults()
-            ->latest()
-            ->limit(20)
-            ->get();
+    $results = $profile
+    ->activityResults()
+    ->latest('id')
+    ->limit(20)
+    ->get();
 
-        $summary = [
-            'sessions' => $profile
-                ->activityResults()
-                ->count(),
+    $progress = $progressInsights->for($profile);
 
-            'best_time' => $profile
-                ->activityResults()
-                ->min('duration_seconds'),
-
-            'total_correct' => $profile
-                ->activityResults()
-                ->sum('correct_answers'),
-
-            'total_errors' => $profile
-                ->activityResults()
-                ->sum('errors'),
-        ];
-
-        return view('progress', [
-            'results' => $results,
-            'summary' => $summary,
-            'childProfile' => $profile,
-        ]);
-    }
+    return view('progress', [
+        'results' => $results,
+        'summary' => $progress['summary'],
+        'activitySummaries' => (
+            $progress['activitySummaries']
+        ),
+        'insight' => $progress['insight'],
+        'childProfile' => $profile,
+    ]);
+}
 
     /**
      * Comprobar que el usuario sea tutor.

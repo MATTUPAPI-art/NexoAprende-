@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Services\ProgressInsights;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -12,49 +12,38 @@ class ActivityResultController extends Controller
     /**
      * Historial de un perfil perteneciente al tutor.
      */
-    public function index(
-        Request $request,
-        int $childProfile
-    ): View {
-        abort_unless(
-            $request->user()->isTutor(),
-            403
-        );
+   public function index(
+    Request $request,
+    int $childProfile,
+    ProgressInsights $progressInsights
+): View {
+    abort_unless(
+        $request->user()->isTutor(),
+        403
+    );
 
-        $profile = $request->user()
-            ->childProfiles()
-            ->findOrFail($childProfile);
+    $profile = $request->user()
+        ->childProfiles()
+        ->findOrFail($childProfile);
 
-        $results = $profile
-            ->activityResults()
-            ->latest()
-            ->limit(20)
-            ->get();
+    $results = $profile
+    ->activityResults()
+    ->latest('id')
+    ->limit(20)
+    ->get();
 
-        $summary = [
-            'sessions' => $profile
-                ->activityResults()
-                ->count(),
+    $progress = $progressInsights->for($profile);
 
-            'best_time' => $profile
-                ->activityResults()
-                ->min('duration_seconds'),
-
-            'total_correct' => $profile
-                ->activityResults()
-                ->sum('correct_answers'),
-
-            'total_errors' => $profile
-                ->activityResults()
-                ->sum('errors'),
-        ];
-
-        return view('progress', [
-            'results' => $results,
-            'summary' => $summary,
-            'childProfile' => $profile,
-        ]);
-    }
+    return view('progress', [
+        'results' => $results,
+        'summary' => $progress['summary'],
+        'activitySummaries' => (
+            $progress['activitySummaries']
+        ),
+        'insight' => $progress['insight'],
+        'childProfile' => $profile,
+    ]);
+}
 
     /**
      * Guardar el resultado para un perfil del tutor.
