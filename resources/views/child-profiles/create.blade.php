@@ -311,7 +311,7 @@
                             Selecciona una edad
                         </option>
 
-                        @for ($age = 6; $age <= 13; $age++)
+                        @for ($age = 5; $age <= 18; $age++)
                             <option
                                 value="{{ $age }}"
                                 @selected(old('age') == $age)
@@ -320,7 +320,10 @@
                             </option>
                         @endfor
                     </select>
-
+<span class="hint">
+    La edad permitirá adaptar la apariencia y la dificultad
+    de las actividades. Puedes registrar perfiles de 5 a 18 años.
+</span>
                     @error('age')
                         <span class="field-error">
                             {{ $message }}

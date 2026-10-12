@@ -39,6 +39,45 @@ class ChildProfile extends Model
     }
 
     /**
+     * Grupo de experiencia correspondiente a su edad.
+     */
+    public function ageGroup(): string
+    {
+        return match (true) {
+            $this->age <= 9 => 'infantil',
+            $this->age <= 13 => 'preadolescente',
+            default => 'adolescente',
+        };
+    }
+
+    /**
+     * Nombre visible de la etapa.
+     */
+    public function ageGroupLabel(): string
+    {
+        return match ($this->ageGroup()) {
+            'infantil' => 'Etapa infantil',
+            'preadolescente' => 'Etapa preadolescente',
+            'adolescente' => 'Etapa adolescente',
+        };
+    }
+
+    /**
+     * Breve explicación para el tutor.
+     */
+    public function ageGroupDescription(): string
+    {
+        return match ($this->ageGroup()) {
+            'infantil' =>
+                'Experiencia visual, sencilla y acompañada.',
+            'preadolescente' =>
+                'Actividades dinámicas con desafíos progresivos.',
+            'adolescente' =>
+                'Experiencia más madura, autónoma y orientada a metas.',
+        };
+    }
+
+    /**
      * Conversiones de atributos.
      *
      * @return array<string, string>

@@ -54,11 +54,11 @@ class ChildProfileController extends Controller
                 'max:60',
             ],
             'age' => [
-                'required',
-                'integer',
-                'min:6',
-                'max:13',
-            ],
+    'required',
+    'integer',
+    'min:5',
+    'max:18',
+],
         ]);
 
         $request->user()

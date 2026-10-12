@@ -294,7 +294,127 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 8px;
         }
+.profiles-list {
+    display: grid;
+    gap: 14px;
+    margin-bottom: 18px;
+}
 
+.profile-card {
+    --stage-color: #5747e8;
+    --stage-dark: #4031bd;
+    --stage-soft: #efedff;
+
+    position: relative;
+    overflow: hidden;
+    padding: 18px;
+    border: 1px solid var(--stage-color);
+    border-radius: 18px;
+    background:
+        linear-gradient(
+            135deg,
+            var(--stage-soft),
+            #ffffff 72%
+        );
+}
+
+.profile-card::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: var(--stage-color);
+    content: "";
+}
+
+.profile-card--infantil {
+    --stage-color: #ec8b2c;
+    --stage-dark: #9a4d0b;
+    --stage-soft: #fff4df;
+}
+
+.profile-card--preadolescente {
+    --stage-color: #5747e8;
+    --stage-dark: #4031bd;
+    --stage-soft: #efedff;
+}
+
+.profile-card--adolescente {
+    --stage-color: #147d72;
+    --stage-dark: #0c5951;
+    --stage-soft: #e4f7f4;
+}
+
+.profile-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.profile-identity {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.profile-avatar {
+    display: grid;
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+    place-items: center;
+    border-radius: 15px;
+    background: var(--stage-soft);
+    font-size: 1.45rem;
+}
+
+.profile-name {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 1.05rem;
+}
+
+.profile-age {
+    color: var(--muted);
+    font-size: 0.86rem;
+}
+
+.stage-badge {
+    display: inline-flex;
+    padding: 7px 10px;
+    border-radius: 999px;
+    color: var(--stage-dark);
+    background: var(--stage-soft);
+    font-size: 0.76rem;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.stage-description {
+    margin: 0 0 16px;
+    padding: 11px 13px;
+    border-radius: 12px;
+    color: var(--stage-dark);
+    background: rgba(255, 255, 255, 0.72);
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.profile-card .primary-button {
+    background: var(--stage-color);
+}
+
+.profile-card .primary-button:hover {
+    background: var(--stage-dark);
+}
+
+.profile-card .secondary-button {
+    justify-content: center;
+    background: #ffffff;
+}
         @media (max-width: 820px) {
             .summary-grid,
             .content-grid {
@@ -332,6 +452,17 @@
                 grid-template-columns: 1fr;
             }
         }
+        @media (max-width: 620px) {
+    .profile-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .stage-badge {
+        margin-left: 60px;
+        white-space: normal;
+    }
+}
     </style>
 </head>
 
@@ -509,66 +640,57 @@
 
     @if ($profiles->isEmpty())
     <div class="empty-profile">
-        Todavía no tienes perfiles infantiles registrados.
+        Todavía no tienes perfiles registrados.
     </div>
 @else
-    <div
-        style="
-            display: grid;
-            gap: 12px;
-            margin-bottom: 18px;
-        "
-    >
+    <div class="profiles-list">
         @foreach ($profiles as $profile)
+            @php
+                $profileIcon = match ($profile->ageGroup()) {
+                    'infantil' => '🧸',
+                    'preadolescente' => '🎯',
+                    'adolescente' => '🚀',
+                };
+            @endphp
+
             <article
-                style="
-                    padding: 15px;
-                    border: 1px solid var(--border);
-                    border-radius: 14px;
-                    background: #fafaff;
+                class="
+                    profile-card
+                    profile-card--{{ $profile->ageGroup() }}
                 "
             >
-                <div
-                    style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-                        gap: 12px;
-                        margin-bottom: 13px;
-                    "
-                >
-                    <div>
-                        <strong>{{ $profile->name }}</strong>
-
-                        <div
-                            style="
-                                margin-top: 4px;
-                                color: var(--muted);
-                                font-size: 0.85rem;
-                            "
+                <div class="profile-header">
+                    <div class="profile-identity">
+                        <span
+                            class="profile-avatar"
+                            aria-hidden="true"
                         >
-                            {{ $profile->age }} años
+                            {{ $profileIcon }}
+                        </span>
+
+                        <div>
+                            <strong class="profile-name">
+                                {{ $profile->name }}
+                            </strong>
+
+                            <span class="profile-age">
+                                {{ $profile->age }} años
+                            </span>
                         </div>
                     </div>
 
-                    <span
-                        style="
-                            padding: 6px 9px;
-                            border-radius: 999px;
-                            color: var(--primary-dark);
-                            background: var(--primary-soft);
-                            font-size: 0.78rem;
-                            font-weight: 800;
-                        "
-                    >
-                        Perfil
+                    <span class="stage-badge">
+                        {{ $profile->ageGroupLabel() }}
                     </span>
                 </div>
+
+                <p class="stage-description">
+                    {{ $profile->ageGroupDescription() }}
+                </p>
 
                 <div class="profile-actions">
                     <a
                         class="primary-button"
-                        style="justify-content: center;"
                         href="{{ route(
                             'child-profiles.activities.attention',
                             $profile
@@ -579,7 +701,6 @@
 
                     <a
                         class="primary-button"
-                        style="justify-content: center;"
                         href="{{ route(
                             'child-profiles.activities.memory',
                             $profile
@@ -587,9 +708,9 @@
                     >
                         Memoria
                     </a>
+
                     <a
                         class="primary-button"
-                        style="justify-content: center;"
                         href="{{ route(
                             'child-profiles.activities.reading',
                             $profile
@@ -597,6 +718,7 @@
                     >
                         Lectura
                     </a>
+
                     <a
                         class="secondary-button"
                         href="{{ route(
@@ -606,7 +728,8 @@
                     >
                         Ver progreso
                     </a>
-                                        <a
+
+                    <a
                         class="secondary-button"
                         href="{{ route(
                             'child-profiles.professionals',

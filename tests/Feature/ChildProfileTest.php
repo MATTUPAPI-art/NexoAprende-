@@ -48,7 +48,7 @@ class ChildProfileTest extends TestCase
         ]);
     }
 
-    public function test_child_age_must_be_between_6_and_13(): void
+    public function test_child_age_must_be_between_5_and_18(): void
     {
         $tutor = User::factory()->create();
 
@@ -56,7 +56,7 @@ class ChildProfileTest extends TestCase
             ->actingAs($tutor)
             ->post(route('child-profiles.store'), [
                 'name' => 'Perfil de prueba',
-                'age' => 5,
+                'age' => 4 ,
             ]);
 
         $response->assertSessionHasErrors('age');
