@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\ActivityResultController;
 use App\Http\Controllers\ChildProfileController;
 use App\Http\Controllers\ProfessionalAccessController;
@@ -23,6 +24,12 @@ Route::view('/', 'home')
 */
 
 Route::middleware('guest')->group(function () {
+    /*
+    |--------------------------------------------------------------------------
+    | Registro profesional
+    |--------------------------------------------------------------------------
+    */
+
     Route::get(
         '/registro-profesional',
         [ProfessionalProfileController::class, 'create']
@@ -32,8 +39,39 @@ Route::middleware('guest')->group(function () {
         '/registro-profesional',
         [ProfessionalProfileController::class, 'store']
     )->name('professional.register.store');
-});
 
+    /*
+    |--------------------------------------------------------------------------
+    | Autenticación con Google para padres y tutores
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get(
+        '/auth/google',
+        [GoogleAuthController::class, 'redirect']
+    )
+        ->middleware('throttle:10,1')
+        ->name('auth.google.redirect');
+
+    Route::get(
+        '/auth/google/callback',
+        [GoogleAuthController::class, 'callback']
+    )
+        ->middleware('throttle:10,1')
+        ->name('auth.google.callback');
+
+    Route::get(
+        '/registro/google/completar',
+        [GoogleAuthController::class, 'showCompletion']
+    )->name('auth.google.complete');
+
+    Route::post(
+        '/registro/google/completar',
+        [GoogleAuthController::class, 'storeCompletion']
+    )
+        ->middleware('throttle:5,1')
+        ->name('auth.google.complete.store');
+});
 /*
 |--------------------------------------------------------------------------
 | Área privada
