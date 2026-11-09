@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Auth\Events\Registered;
 use App\Models\ProfessionalProfile;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -82,16 +83,19 @@ class ProfessionalProfileController extends Controller
             return $user;
         });
 
+        event(new Registered($user));
+
         Auth::login($user);
         $request->session()->regenerate();
 
         return redirect()
-            ->route('professional.dashboard')
+            ->route('verification.notice')
             ->with(
                 'success',
-                'Tu cuenta profesional fue creada correctamente.'
+                'Cuenta creada. Verifica tu correo para continuar.'
             );
     }
+
 
     public function dashboard(Request $request): View
     {

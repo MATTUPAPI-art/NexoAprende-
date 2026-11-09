@@ -35,7 +35,7 @@ class ProfessionalProfileTest extends TestCase
 
         $response
             ->assertSessionHasNoErrors()
-            ->assertRedirect(route('professional.dashboard'));
+            ->assertRedirect(route('verification.notice'));
 
         $this->assertAuthenticated();
 
@@ -98,7 +98,7 @@ class ProfessionalProfileTest extends TestCase
 
         $this->actingAs($professional)
             ->get(route('dashboard'))
-            ->assertRedirect(route('professional.dashboard'));
+            ->assertRedirect(route('verification.notice'));
     }
 
     public function test_professional_cannot_create_child_profile(): void
