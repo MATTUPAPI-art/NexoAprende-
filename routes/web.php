@@ -5,6 +5,7 @@ use App\Http\Controllers\ChildProfileController;
 use App\Http\Controllers\ProfessionalAccessController;
 use App\Http\Controllers\ProfessionalProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\QuestionnaireController;
 
 Route::view('/', 'home')
     ->name('inicio');
@@ -137,4 +138,39 @@ Route::delete(
         '/panel-profesional/perfiles/{childProfile}/progreso',
         [ProfessionalAccessController::class, 'progress']
     )->name('professional.child-profiles.progress');
-});
+/*
+|--------------------------------------------------------------------------
+| Cuestionarios profesionales
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/panel-profesional/cuestionarios',
+    [QuestionnaireController::class, 'index']
+)->name('professional.questionnaires.index');
+
+Route::get(
+    '/panel-profesional/cuestionarios/crear',
+    [QuestionnaireController::class, 'create']
+)->name('professional.questionnaires.create');
+
+Route::post(
+    '/panel-profesional/cuestionarios',
+    [QuestionnaireController::class, 'store']
+)->name('professional.questionnaires.store');
+
+Route::get(
+    '/panel-profesional/cuestionarios/{questionnaire}/editar',
+    [QuestionnaireController::class, 'edit']
+)->name('professional.questionnaires.edit');
+
+Route::put(
+    '/panel-profesional/cuestionarios/{questionnaire}',
+    [QuestionnaireController::class, 'update']
+)->name('professional.questionnaires.update');
+
+Route::delete(
+    '/panel-profesional/cuestionarios/{questionnaire}',
+    [QuestionnaireController::class, 'destroy']
+)->name('professional.questionnaires.destroy');
+    });
