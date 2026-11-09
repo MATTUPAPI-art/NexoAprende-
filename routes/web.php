@@ -4,14 +4,17 @@ use App\Http\Controllers\ActivityResultController;
 use App\Http\Controllers\ChildProfileController;
 use App\Http\Controllers\ProfessionalAccessController;
 use App\Http\Controllers\ProfessionalProfileController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QuestionnaireController;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Página pública
+|--------------------------------------------------------------------------
+*/
 
 Route::view('/', 'home')
     ->name('inicio');
-
-Route::view('/actividades/atencion', 'demo-atencion')
-    ->name('activities.attention');
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +41,12 @@ Route::middleware('guest')->group(function () {
 */
 
 Route::middleware('auth')->group(function () {
+    /*
+    |--------------------------------------------------------------------------
+    | Paneles
+    |--------------------------------------------------------------------------
+    */
+
     Route::get(
         '/panel',
         [ChildProfileController::class, 'index']
@@ -48,6 +57,12 @@ Route::middleware('auth')->group(function () {
         [ProfessionalProfileController::class, 'dashboard']
     )->name('professional.dashboard');
 
+    /*
+    |--------------------------------------------------------------------------
+    | Perfiles infantiles
+    |--------------------------------------------------------------------------
+    */
+
     Route::get(
         '/perfiles/crear',
         [ChildProfileController::class, 'create']
@@ -57,25 +72,27 @@ Route::middleware('auth')->group(function () {
         '/perfiles',
         [ChildProfileController::class, 'store']
     )->name('child-profiles.store');
-Route::get(
-    '/perfiles/{childProfile}/editar',
-    [ChildProfileController::class, 'edit']
-)->name('child-profiles.edit');
 
-Route::put(
-    '/perfiles/{childProfile}',
-    [ChildProfileController::class, 'update']
-)->name('child-profiles.update');
+    Route::get(
+        '/perfiles/{childProfile}/editar',
+        [ChildProfileController::class, 'edit']
+    )->name('child-profiles.edit');
 
-Route::get(
-    '/perfiles/{childProfile}/eliminar',
-    [ChildProfileController::class, 'confirmDestroy']
-)->name('child-profiles.delete');
+    Route::put(
+        '/perfiles/{childProfile}',
+        [ChildProfileController::class, 'update']
+    )->name('child-profiles.update');
 
-Route::delete(
-    '/perfiles/{childProfile}',
-    [ChildProfileController::class, 'destroy']
-)->name('child-profiles.destroy');
+    Route::get(
+        '/perfiles/{childProfile}/eliminar',
+        [ChildProfileController::class, 'confirmDestroy']
+    )->name('child-profiles.delete');
+
+    Route::delete(
+        '/perfiles/{childProfile}',
+        [ChildProfileController::class, 'destroy']
+    )->name('child-profiles.destroy');
+
     /*
     |--------------------------------------------------------------------------
     | Actividades infantiles
@@ -138,39 +155,40 @@ Route::delete(
         '/panel-profesional/perfiles/{childProfile}/progreso',
         [ProfessionalAccessController::class, 'progress']
     )->name('professional.child-profiles.progress');
-/*
-|--------------------------------------------------------------------------
-| Cuestionarios profesionales
-|--------------------------------------------------------------------------
-*/
 
-Route::get(
-    '/panel-profesional/cuestionarios',
-    [QuestionnaireController::class, 'index']
-)->name('professional.questionnaires.index');
+    /*
+    |--------------------------------------------------------------------------
+    | Cuestionarios profesionales
+    |--------------------------------------------------------------------------
+    */
 
-Route::get(
-    '/panel-profesional/cuestionarios/crear',
-    [QuestionnaireController::class, 'create']
-)->name('professional.questionnaires.create');
+    Route::get(
+        '/panel-profesional/cuestionarios',
+        [QuestionnaireController::class, 'index']
+    )->name('professional.questionnaires.index');
 
-Route::post(
-    '/panel-profesional/cuestionarios',
-    [QuestionnaireController::class, 'store']
-)->name('professional.questionnaires.store');
+    Route::get(
+        '/panel-profesional/cuestionarios/crear',
+        [QuestionnaireController::class, 'create']
+    )->name('professional.questionnaires.create');
 
-Route::get(
-    '/panel-profesional/cuestionarios/{questionnaire}/editar',
-    [QuestionnaireController::class, 'edit']
-)->name('professional.questionnaires.edit');
+    Route::post(
+        '/panel-profesional/cuestionarios',
+        [QuestionnaireController::class, 'store']
+    )->name('professional.questionnaires.store');
 
-Route::put(
-    '/panel-profesional/cuestionarios/{questionnaire}',
-    [QuestionnaireController::class, 'update']
-)->name('professional.questionnaires.update');
+    Route::get(
+        '/panel-profesional/cuestionarios/{questionnaire}/editar',
+        [QuestionnaireController::class, 'edit']
+    )->name('professional.questionnaires.edit');
 
-Route::delete(
-    '/panel-profesional/cuestionarios/{questionnaire}',
-    [QuestionnaireController::class, 'destroy']
-)->name('professional.questionnaires.destroy');
-    });
+    Route::put(
+        '/panel-profesional/cuestionarios/{questionnaire}',
+        [QuestionnaireController::class, 'update']
+    )->name('professional.questionnaires.update');
+
+    Route::delete(
+        '/panel-profesional/cuestionarios/{questionnaire}',
+        [QuestionnaireController::class, 'destroy']
+    )->name('professional.questionnaires.destroy');
+});
