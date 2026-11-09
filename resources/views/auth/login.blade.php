@@ -368,6 +368,24 @@
                         @enderror
                     </div>
 
+                    <p
+    style="
+        margin: -6px 0 18px;
+        text-align: right;
+    "
+>
+    <a
+        href="{{ route('password.request') }}"
+        style="
+            color: var(--primary);
+            font-weight: 700;
+            text-decoration: none;
+        "
+    >
+        ¿Olvidaste tu contraseña?
+    </a>
+</p>
+
                     <div class="remember-row">
                         <label for="remember">
                             <input
