@@ -407,7 +407,27 @@
                 font-size: 1.7rem;
             }
         }
+                .turnstile-container {
+            width: 100%;
+            min-height: 66px;
+            margin: 4px 0 18px;
+        }
+
+        .turnstile-container .cf-turnstile {
+            width: 100%;
+        }
     </style>
+
+        <link
+        rel="preconnect"
+        href="https://challenges.cloudflare.com"
+    >
+
+    <script
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+        async
+        defer
+    ></script>
 </head>
 
 <body>
@@ -607,6 +627,23 @@
                         Crear mi cuenta de tutor
                     </button>
 
+                                        <div class="turnstile-container">
+                        <div
+                            class="cf-turnstile"
+                            data-sitekey="{{ config(
+                                'services.turnstile.site_key'
+                            ) }}"
+                            data-theme="light"
+                            data-size="flexible"
+                            data-language="es"
+                        ></div>
+
+                        @error('cf-turnstile-response')
+                            <span class="field-error">
+                                {{ $message }}
+                            </span>
+                        @enderror
+                    </div>
                     <p class="legal-note">
                         Al registrarte confirmas que eres padre, madre o tutor
                         responsable. NexoAprende es una herramienta educativa

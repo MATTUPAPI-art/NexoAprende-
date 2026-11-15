@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
+use App\Rules\ValidTurnstile;
 
 class ProfessionalProfileController extends Controller
 {
@@ -62,6 +63,10 @@ class ProfessionalProfileController extends Controller
                 'nullable',
                 'string',
                 'max:1000',
+            ],
+                        'cf-turnstile-response' => [
+                'required',
+                new ValidTurnstile(),
             ],
         ]);
 

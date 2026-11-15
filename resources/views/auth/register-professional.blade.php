@@ -254,7 +254,33 @@
                 grid-column: auto;
             }
         }
+                .turnstile-container {
+            width: 100%;
+            min-height: 66px;
+            margin: 5px 0 18px;
+        }
+
+        .turnstile-container .cf-turnstile {
+            width: 100%;
+        }
+
+        .turnstile-error {
+            display: block;
+            margin-top: 7px;
+            color: var(--danger);
+            font-size: 0.8rem;
+        }
     </style>
+        <link
+        rel="preconnect"
+        href="https://challenges.cloudflare.com"
+    >
+
+    <script
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+        async
+        defer
+    ></script>
 </head>
 
 <body>
@@ -461,6 +487,24 @@
                                 required
                             >
                         </div>
+                                       </div>
+
+                    <div class="turnstile-container">
+                        <div
+                            class="cf-turnstile"
+                            data-sitekey="{{ config(
+                                'services.turnstile.site_key'
+                            ) }}"
+                            data-theme="light"
+                            data-size="flexible"
+                            data-language="es"
+                        ></div>
+
+                        @error('cf-turnstile-response')
+                            <span class="turnstile-error">
+                                {{ $message }}
+                            </span>
+                        @enderror
                     </div>
 
                     <button class="submit-button" type="submit">

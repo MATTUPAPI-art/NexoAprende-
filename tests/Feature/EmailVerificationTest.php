@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
@@ -100,6 +101,17 @@ class EmailVerificationTest extends TestCase
     {
         Notification::fake();
 
+        config([
+            'services.turnstile.secret_key' => 'test-secret-key',
+            'services.turnstile.verify_url' => 'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+        ]);
+
+        Http::fake([
+            'challenges.cloudflare.com/*' => Http::response([
+                'success' => true,
+            ], 200),
+        ]);
+
         $this->post(
             route('professional.register.store'),
             [
@@ -111,6 +123,7 @@ class EmailVerificationTest extends TestCase
                 'license_number' => 'REG-VERIFICACION-001',
                 'years_experience' => 5,
                 'biography' => 'Perfil profesional de prueba.',
+                'cf-turnstile-response' => 'valid-test-token',
             ]
         )->assertSessionHasNoErrors();
 
@@ -123,14 +136,15 @@ class EmailVerificationTest extends TestCase
             VerifyEmail::class
         );
     }
-    public function test_unverified_user_cannot_open_private_panel(): void
-{
-    $user = User::factory()
-        ->unverified()
-        ->create();
 
-    $this->actingAs($user)
-        ->get(route('dashboard'))
-        ->assertRedirect(route('verification.notice'));
-}
+    public function test_unverified_user_cannot_open_private_panel(): void
+    {
+        $user = User::factory()
+            ->unverified()
+            ->create();
+
+        $this->actingAs($user)
+            ->get(route('dashboard'))
+            ->assertRedirect(route('verification.notice'));
+    }
 }
