@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Auth\Events\Registered;
 use App\Models\ProfessionalProfile;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\View\View;
+use App\Rules\ValidTurnstile;
 
 class ProfessionalProfileController extends Controller
 {
@@ -62,6 +64,10 @@ class ProfessionalProfileController extends Controller
                 'string',
                 'max:1000',
             ],
+                        'cf-turnstile-response' => [
+                'required',
+                new ValidTurnstile(),
+            ],
         ]);
 
         $user = DB::transaction(function () use ($validated): User {
@@ -82,16 +88,19 @@ class ProfessionalProfileController extends Controller
             return $user;
         });
 
+        event(new Registered($user));
+
         Auth::login($user);
         $request->session()->regenerate();
 
         return redirect()
-            ->route('professional.dashboard')
+            ->route('verification.notice')
             ->with(
                 'success',
-                'Tu cuenta profesional fue creada correctamente.'
+                'Cuenta creada. Verifica tu correo para continuar.'
             );
     }
+
 
     public function dashboard(Request $request): View
     {

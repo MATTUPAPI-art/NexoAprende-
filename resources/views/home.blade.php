@@ -754,7 +754,7 @@
                     <div class="hero-actions">
                         <a
                             class="button button-primary"
-                            href="{{ route('activities.attention') }}"
+                            href="{{ auth()->check() ? route('dashboard') : route('register') }}"
                         >
                             Probar actividad de atención
                         </a>
@@ -877,7 +877,7 @@
 
                         <a
                             class="button button-primary"
-                            href="{{ route('activities.attention') }}"
+                            href="{{ auth()->check() ? route('dashboard') : route('register') }}"
                         >
                             Iniciar actividad
                         </a>
@@ -935,7 +935,7 @@
 
                 <a
                     class="button button-primary"
-                    href="{{ route('activities.attention') }}"
+                    href="{{ auth()->check() ? route('dashboard') : route('register') }}"
                 >
                     Probar ahora
                 </a>

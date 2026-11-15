@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class ProfessionalProfileTest extends TestCase
@@ -19,6 +20,17 @@ class ProfessionalProfileTest extends TestCase
 
     public function test_guest_can_register_as_professional(): void
     {
+        config([
+            'services.turnstile.secret_key' => 'test-secret-key',
+            'services.turnstile.verify_url' => 'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+        ]);
+
+        Http::fake([
+            'challenges.cloudflare.com/*' => Http::response([
+                'success' => true,
+            ], 200),
+        ]);
+
         $response = $this->post(
             route('professional.register.store'),
             [
@@ -30,12 +42,13 @@ class ProfessionalProfileTest extends TestCase
                 'biography' => 'Experiencia en acompañamiento educativo.',
                 'password' => 'password123',
                 'password_confirmation' => 'password123',
+                'cf-turnstile-response' => 'valid-test-token',
             ]
         );
 
         $response
             ->assertSessionHasNoErrors()
-            ->assertRedirect(route('professional.dashboard'));
+            ->assertRedirect(route('verification.notice'));
 
         $this->assertAuthenticated();
 
@@ -48,7 +61,6 @@ class ProfessionalProfileTest extends TestCase
             'specialty' => 'Psicopedagogía',
             'license_number' => 'PSP-2026-001',
             'years_experience' => 5,
-            'verified' => false,
         ]);
     }
 

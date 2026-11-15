@@ -254,7 +254,95 @@
                 grid-column: auto;
             }
         }
+                .turnstile-container {
+            width: 100%;
+            min-height: 66px;
+            margin: 5px 0 18px;
+        }
+
+        .turnstile-container .cf-turnstile {
+            width: 100%;
+        }
+
+        .turnstile-error {
+            display: block;
+            margin-top: 7px;
+            color: var(--danger);
+            font-size: 0.8rem;
+        }
+        .google-access {
+            margin-bottom: 22px;
+        }
+
+        .google-button {
+            width: 100%;
+            min-height: 48px;
+            padding: 11px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 11px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            background: #ffffff;
+            font-size: 0.93rem;
+            font-weight: 800;
+            text-decoration: none;
+            cursor: pointer;
+            transition:
+                border-color 150ms ease,
+                background 150ms ease,
+                transform 150ms ease,
+                box-shadow 150ms ease;
+        }
+
+        .google-button:hover {
+            border-color: #b9c2d1;
+            background: #f8f9fc;
+            transform: translateY(-1px);
+            box-shadow: 0 7px 18px rgba(31, 45, 78, 0.08);
+        }
+
+        .google-button:focus-visible {
+            outline: 4px solid var(--primary-soft);
+            outline-offset: 2px;
+        }
+
+        .google-icon {
+            width: 20px;
+            height: 20px;
+            flex: 0 0 20px;
+        }
+
+        .form-divider {
+            margin: 18px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--muted);
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .form-divider::before,
+        .form-divider::after {
+            height: 1px;
+            flex: 1;
+            content: "";
+            background: var(--border);
+        }
     </style>
+        <link
+        rel="preconnect"
+        href="https://challenges.cloudflare.com"
+    >
+
+    <script
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+        async
+        defer
+    ></script>
 </head>
 
 <body>
@@ -293,6 +381,42 @@
                         Completa tus datos personales y profesionales.
                     </p>
                 </header>
+
+                <div class="google-access">
+    <a
+        class="google-button"
+        href="{{ route('auth.google.professional.redirect') }}"
+    >
+        <svg
+            class="google-icon"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+        >
+            <path
+                fill="#4285F4"
+                d="M21.6 12.23c0-.71-.06-1.4-.18-2.07H12v3.92h5.38a4.6 4.6 0 0 1-2 3.02v2.54h3.24c1.9-1.75 2.98-4.33 2.98-7.41Z"
+            />
+            <path
+                fill="#34A853"
+                d="M12 22c2.7 0 4.97-.9 6.62-2.43l-3.24-2.54c-.9.6-2.05.96-3.38.96-2.6 0-4.8-1.76-5.59-4.12H3.07v2.62A10 10 0 0 0 12 22Z"
+            />
+            <path
+                fill="#FBBC05"
+                d="M6.41 13.87A6 6 0 0 1 6.1 12c0-.65.11-1.28.31-1.87V7.51H3.07A10 10 0 0 0 2 12c0 1.61.38 3.13 1.07 4.49l3.34-2.62Z"
+            />
+            <path
+                fill="#EA4335"
+                d="M12 6.01c1.47 0 2.79.51 3.83 1.5l2.87-2.88A9.64 9.64 0 0 0 12 2a10 10 0 0 0-8.93 5.51l3.34 2.62C7.2 7.77 9.4 6.01 12 6.01Z"
+            />
+        </svg>
+
+        Registrarme como profesional con Google
+    </a>
+
+    <div class="form-divider">
+        o completa el formulario
+    </div>
+</div>
 
                 @if ($errors->any())
                     <div class="error-summary" role="alert">
@@ -461,6 +585,24 @@
                                 required
                             >
                         </div>
+                                       </div>
+
+                    <div class="turnstile-container">
+                        <div
+                            class="cf-turnstile"
+                            data-sitekey="{{ config(
+                                'services.turnstile.site_key'
+                            ) }}"
+                            data-theme="light"
+                            data-size="flexible"
+                            data-language="es"
+                        ></div>
+
+                        @error('cf-turnstile-response')
+                            <span class="turnstile-error">
+                                {{ $message }}
+                            </span>
+                        @enderror
                     </div>
 
                     <button class="submit-button" type="submit">

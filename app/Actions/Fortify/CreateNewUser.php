@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
+use App\Rules\ValidTurnstile;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -20,10 +21,14 @@ class CreateNewUser implements CreatesNewUsers
      *
      * @throws ValidationException
      */
-    public function create(array $input): User
+        public function create(array $input): User
     {
         Validator::make($input, [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
             'email' => [
                 'required',
                 'string',
@@ -32,6 +37,10 @@ class CreateNewUser implements CreatesNewUsers
                 Rule::unique(User::class),
             ],
             'password' => $this->passwordRules(),
+            'cf-turnstile-response' => [
+                'required',
+                new ValidTurnstile(),
+            ],
         ])->validate();
 
         return User::create([
@@ -39,5 +48,6 @@ class CreateNewUser implements CreatesNewUsers
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]);
+
     }
 }
