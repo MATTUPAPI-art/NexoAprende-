@@ -8,7 +8,9 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Completar registro | NexoAprende</title>
+    <title>
+        Completar registro | NexoAprende
+    </title>
 
     <style>
         :root {
@@ -53,7 +55,7 @@
         }
 
         .registration-shell {
-            width: min(940px, 100%);
+            width: min(980px, 100%);
             overflow: hidden;
             display: grid;
             grid-template-columns: 0.9fr 1.1fr;
@@ -202,8 +204,18 @@
             padding-left: 20px;
         }
 
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0 16px;
+        }
+
         .field {
             margin-bottom: 18px;
+        }
+
+        .field-full {
+            grid-column: 1 / -1;
         }
 
         label {
@@ -215,7 +227,9 @@
 
         input[type="text"],
         input[type="email"],
-        input[type="password"] {
+        input[type="number"],
+        input[type="password"],
+        textarea {
             width: 100%;
             min-height: 48px;
             padding: 12px 14px;
@@ -230,7 +244,13 @@
                 box-shadow 160ms ease;
         }
 
-        input:focus {
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        input:focus,
+        textarea:focus {
             border-color: var(--primary);
             box-shadow: 0 0 0 4px var(--primary-soft);
         }
@@ -331,7 +351,7 @@
             }
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 560px) {
             body {
                 padding: 0;
                 background: var(--surface);
@@ -342,6 +362,14 @@
                 border: 0;
                 border-radius: 0;
                 box-shadow: none;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .field-full {
+                grid-column: auto;
             }
 
             .verified-label {
@@ -357,30 +385,49 @@
             <p class="brand">NexoAprende</p>
 
             <div>
-                <h1>Un último paso para comenzar.</h1>
+                <h1>
+                    {{ $isProfessional
+                        ? 'Completa tu perfil profesional.'
+                        : 'Un último paso para comenzar.' }}
+                </h1>
 
                 <p>
-                    Confirma tus datos y crea una contraseña para que
-                    también puedas ingresar con tu correo desde cualquier
-                    dispositivo.
+                    @if ($isProfessional)
+                        Confirma tus datos y completa la información de tu
+                        experiencia profesional para comenzar.
+                    @else
+                        Confirma tus datos y crea una contraseña para que
+                        también puedas ingresar con tu correo desde cualquier
+                        dispositivo.
+                    @endif
                 </p>
             </div>
 
             <div class="security-note">
-                La cuenta será creada como padre o tutor. Los perfiles de
-                menores solo podrán ser gestionados desde esta cuenta.
+                @if ($isProfessional)
+                    La cuenta será creada como profesional. Tu perfil quedará
+                    pendiente de revisión y solo podrás consultar información
+                    que una familia autorice expresamente.
+                @else
+                    La cuenta será creada como padre o tutor. Los perfiles de
+                    menores solo podrán ser gestionados desde esta cuenta.
+                @endif
             </div>
         </section>
 
         <section class="form-panel">
-            <h2>Completa tu registro</h2>
+            <h2>
+                {{ $isProfessional
+                    ? 'Completa tu registro profesional'
+                    : 'Completa tu registro' }}
+            </h2>
 
             <p class="form-description">
                 Tu correo ya fue verificado de forma segura mediante Google.
             </p>
 
             <div class="google-account">
-                @if ($googleRegistration['avatar_url'])
+                @if (! empty($googleRegistration['avatar_url']))
                     <img
                         class="account-avatar"
                         src="{{ $googleRegistration['avatar_url'] }}"
@@ -388,9 +435,16 @@
                         referrerpolicy="no-referrer"
                     >
                 @else
-                    <div class="account-placeholder" aria-hidden="true">
+                    <div
+                        class="account-placeholder"
+                        aria-hidden="true"
+                    >
                         {{ mb_strtoupper(
-                            mb_substr($googleRegistration['name'], 0, 1)
+                            mb_substr(
+                                $googleRegistration['name'],
+                                0,
+                                1
+                            )
                         ) }}
                     </div>
                 @endif
@@ -426,70 +480,138 @@
             >
                 @csrf
 
-                <div class="field">
-                    <label for="name">
-                        Nombre completo del padre o tutor
-                    </label>
+                <div class="form-grid">
+                    <div class="field field-full">
+                        <label for="name">
+                            {{ $isProfessional
+                                ? 'Nombre completo del profesional'
+                                : 'Nombre completo del padre o tutor' }}
+                        </label>
 
-                    <input
-                        id="name"
-                        name="name"
-                        type="text"
-                        value="{{ old(
-                            'name',
-                            $googleRegistration['name']
-                        ) }}"
-                        maxlength="255"
-                        autocomplete="name"
-                        required
-                        autofocus
-                    >
-                </div>
+                        <input
+                            id="name"
+                            name="name"
+                            type="text"
+                            value="{{ old(
+                                'name',
+                                $googleRegistration['name']
+                            ) }}"
+                            maxlength="255"
+                            autocomplete="name"
+                            required
+                            autofocus
+                        >
+                    </div>
 
-                <div class="field">
-                    <label for="email">
-                        Correo verificado
-                    </label>
+                    <div class="field field-full">
+                        <label for="email">
+                            Correo verificado
+                        </label>
 
-                    <input
-                        id="email"
-                        type="email"
-                        value="{{ $googleRegistration['email'] }}"
-                        disabled
-                    >
-                </div>
+                        <input
+                            id="email"
+                            type="email"
+                            value="{{ $googleRegistration['email'] }}"
+                            disabled
+                        >
+                    </div>
 
-                <div class="field">
-                    <label for="password">
-                        Crea una contraseña para NexoAprende
-                    </label>
+                    @if ($isProfessional)
+                        <div class="field">
+                            <label for="specialty">
+                                Especialidad
+                            </label>
 
-                    <input
-                        id="password"
-                        name="password"
-                        type="password"
-                        autocomplete="new-password"
-                        required
-                    >
+                            <input
+                                id="specialty"
+                                name="specialty"
+                                type="text"
+                                value="{{ old('specialty') }}"
+                                maxlength="255"
+                                required
+                            >
+                        </div>
 
-                    <p class="field-help">
-                        Utiliza una contraseña segura que no uses en otros
-                        servicios.
-                    </p>
-                </div>
+                        <div class="field">
+                            <label for="license_number">
+                                Número de matrícula
+                            </label>
 
-                <div class="field">
-                    <label for="password_confirmation">
-                        Confirma tu contraseña
-                    </label>
+                            <input
+                                id="license_number"
+                                name="license_number"
+                                type="text"
+                                value="{{ old('license_number') }}"
+                                maxlength="100"
+                                required
+                            >
+                        </div>
 
-                    <input
-                        id="password_confirmation"
-                        name="password_confirmation"
-                        type="password"
-                        autocomplete="new-password"
-                        required
-                    >
+                        <div class="field field-full">
+                            <label for="years_experience">
+                                Años de experiencia
+                            </label>
+
+                            <input
+                                id="years_experience"
+                                name="years_experience"
+                                type="number"
+                                value="{{ old('years_experience', 0) }}"
+                                min="0"
+                                max="80"
+                                required
+                            >
+                        </div>
+
+                        <div class="field field-full">
+                            <label for="biography">
+                                Presentación profesional
+                            </label>
+
+                            <textarea
+                                id="biography"
+                                name="biography"
+                                maxlength="1000"
+                            >{{ old('biography') }}</textarea>
+
+                            <p class="field-help">
+                                Campo opcional. Máximo 1000 caracteres.
+                            </p>
+                        </div>
+                    @endif
+
+                    <div class="field">
+                        <label for="password">
+                            Crea una contraseña para NexoAprende
+                        </label>
+
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            autocomplete="new-password"
+                            required
+                        >
+
+                        <p class="field-help">
+                            Utiliza una contraseña segura que no uses en otros
+                            servicios.
+                        </p>
+                    </div>
+
+                    <div class="field">
+                        <label for="password_confirmation">
+                            Confirma tu contraseña
+                        </label>
+
+                        <input
+                            id="password_confirmation"
+                            name="password_confirmation"
+                            type="password"
+                            autocomplete="new-password"
+                            required
+                        >
+                    </div>
                 </div>
 
                 <label class="terms" for="terms">
@@ -503,19 +625,29 @@
                     >
 
                     <span>
-                        Confirmo que soy padre, madre o tutor responsable y
-                        acepto el uso educativo de la plataforma. Comprendo
-                        que NexoAprende no realiza diagnósticos clínicos.
+                        @if ($isProfessional)
+                            Confirmo que los datos profesionales proporcionados
+                            son correctos. Comprendo que NexoAprende es una
+                            herramienta educativa y no sustituye evaluaciones
+                            o diagnósticos clínicos.
+                        @else
+                            Confirmo que soy padre, madre o tutor responsable y
+                            acepto el uso educativo de la plataforma. Comprendo
+                            que NexoAprende no realiza diagnósticos clínicos.
+                        @endif
                     </span>
                 </label>
 
                 <button class="submit-button" type="submit">
-                    Crear mi cuenta de tutor
+                    {{ $isProfessional
+                        ? 'Crear mi cuenta profesional'
+                        : 'Crear mi cuenta de tutor' }}
                 </button>
             </form>
 
             <p class="login-link">
                 ¿Deseas usar otra cuenta?
+
                 <a href="{{ route('login') }}">
                     Volver al inicio de sesión
                 </a>

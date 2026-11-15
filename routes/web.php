@@ -53,6 +53,13 @@ Route::middleware('guest')->group(function () {
         ->middleware('throttle:10,1')
         ->name('auth.google.redirect');
 
+        Route::get(
+    '/auth/google/profesional',
+    [GoogleAuthController::class, 'redirectProfessional']
+)
+    ->middleware('throttle:10,1')
+    ->name('auth.google.professional.redirect');
+
     Route::get(
         '/auth/google/callback',
         [GoogleAuthController::class, 'callback']
