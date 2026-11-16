@@ -192,6 +192,53 @@
             text-align: center;
         }
 
+                .questionnaire-access {
+            display: flex;
+            margin-bottom: 22px;
+            padding: 22px 25px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            border: 1px solid #d8d3ff;
+            border-radius: 18px;
+            background: var(--primary-soft);
+            box-shadow: var(--shadow);
+        }
+
+        .questionnaire-access h2 {
+            margin: 0 0 7px;
+            color: var(--primary-dark);
+            font-size: 1.25rem;
+        }
+
+        .questionnaire-access p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .questionnaire-button {
+            display: inline-flex;
+            min-height: 46px;
+            padding: 11px 18px;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border-radius: 11px;
+            color: #ffffff;
+            background: var(--primary);
+            font-weight: 800;
+            text-decoration: none;
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .questionnaire-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
         .privacy {
             margin-top: 22px;
             padding: 18px;
@@ -202,7 +249,16 @@
             line-height: 1.6;
         }
 
-        @media (max-width: 760px) {
+                @media (max-width: 760px) {
+            .questionnaire-access {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .questionnaire-button {
+                width: 100%;
+            }
+
             .grid {
                 grid-template-columns: 1fr;
             }
@@ -251,7 +307,8 @@
             </div>
         @endif
 
-        <section class="welcome">
+
+                <section class="welcome">
             <p>Panel profesional</p>
 
             <h1>
@@ -262,6 +319,26 @@
                 Desde este espacio podrás acompañar a las familias que
                 autoricen el acceso a sus perfiles infantiles.
             </span>
+        </section>
+
+        <section class="questionnaire-access">
+            <div>
+                <h2>Gestión de cuestionarios</h2>
+
+                <p>
+                    Crea cuestionarios y administra sus preguntas para
+                    utilizarlos en el acompañamiento de las familias.
+                </p>
+            </div>
+
+            <a
+                class="questionnaire-button"
+                href="{{ route(
+                    'professional.questionnaires.index'
+                ) }}"
+            >
+                Administrar cuestionarios
+            </a>
         </section>
 
         <div class="grid">
