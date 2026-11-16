@@ -7,6 +7,7 @@ use App\Http\Controllers\ProfessionalAccessController;
 use App\Http\Controllers\ProfessionalProfileController;
 use App\Http\Controllers\QuestionnaireController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\QuestionnaireQuestionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -236,4 +237,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         '/panel-profesional/cuestionarios/{questionnaire}',
         [QuestionnaireController::class, 'destroy']
     )->name('professional.questionnaires.destroy');
+    Route::post(
+    '/panel-profesional/cuestionarios/{questionnaire}/preguntas',
+    [QuestionnaireQuestionController::class, 'store']
+)->name('professional.questionnaires.questions.store');
+
+Route::put(
+    '/panel-profesional/cuestionarios/{questionnaire}/preguntas/{question}',
+    [QuestionnaireQuestionController::class, 'update']
+)->name('professional.questionnaires.questions.update');
+
+Route::delete(
+    '/panel-profesional/cuestionarios/{questionnaire}/preguntas/{question}',
+    [QuestionnaireQuestionController::class, 'destroy']
+)->name('professional.questionnaires.questions.destroy');
 });
